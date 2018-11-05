@@ -5,8 +5,6 @@ import fire from '../../../src/config/config';
 export default class AuthLoading extends Component {
   constructor() {
     super();
-
-
   }
 
   componentDidMount() {
@@ -15,7 +13,10 @@ export default class AuthLoading extends Component {
 
   authListener() {
     fire.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? 'App' : 'Auth', {userData: user})
+      if (user) {
+        fetch(`https://us-central1-f-app-273d0.cloudfunctions.net/updateTasks?userId=${user.uid}`).catch(e => console.log(e));
+      }
+      this.props.navigation.navigate(user ? 'App' : 'Auth', { userData: user });
     })
   }
 

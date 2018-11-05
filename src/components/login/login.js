@@ -1,9 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Image, TouchableHighlight } from 'react-native';
-import { Redirect, Link } from 'react-router-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight, Dimensions} from 'react-native';
 import fire from '../../config/config';
-
-var image = require('../../images/logo.png');
 
 export default class App extends React.Component {
   constructor(props) {
@@ -12,24 +9,37 @@ export default class App extends React.Component {
     this.state = {
       email: "",
       password: "",
-      redirect: false
+      loginError: "",
+      signingIn: false
     }
   }
 
   handleLogin() {
-    fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(() =>
-      this.setState({
-        redirect: true
+    this.setState({ signingIn: true })
+    fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+      .catch(loginError => {
+        let errorMessage = "";
+
+        switch (loginError.code) {
+          case "auth/invalid-email":
+            errorMessage = "Ogiltig email";
+            break;
+          case "auth/wrong-password":
+            errorMessage = "Fel lösenord";
+            break;
+          default:
+            errorMessage = "Something went wrong"
+            break;
+        }
+
+        this.setState({ loginError: errorMessage, signingIn: false });
       })
-    ).catch(error => {
-      console.log(error);
-    })
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Image source={image} style={{ height: 100, width: 100, position: "absolute", top: 150 }} ></Image>
+        <Text style={styles.titleText}>Sysselsatt</Text>
         <TextInput
           underlineColorAndroid="#2DC874"
           placeholder="Email"
@@ -46,13 +56,11 @@ export default class App extends React.Component {
           onChangeText={password => this.setState({ password })}
           value={this.state.password}>
         </TextInput>
-        <TouchableHighlight onPress={this.handleLogin.bind(this)} style={styles.loginButton}>
-          <Text style={styles.loginText}>Logga in</Text>
+        {!this.state.signingIn && <Button onPress={this.handleLogin.bind(this)} title="Login " style={styles.loginButton} color="#2DC874" />}
+        <Text style={{ color: "#E74C3C" }}>{this.state.loginError}</Text>
+        <TouchableHighlight style={{ marginTop: "auto", marginBottom: 48 }} onPress={() => this.props.navigation.navigate('Register')}>
+          <Text style={styles.registerText}>Resgistrera</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('Register')}>
-          <Text style={styles.registerText}>Registrera</Text>
-        </TouchableHighlight>
-        {this.state.redirect ? <Redirect to="/Home" /> : null}
       </View>
     );
   }
@@ -60,18 +68,21 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Dimensions.get("window").height * .16,
     flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'center',
     alignItems: 'center',
+  },
+  titleText: {
+    fontSize: 48,
+    fontWeight: "bold",
+    width: "100%",
+    textAlign: 'center',
+    marginBottom: 50
   },
   loginButton: {
     backgroundColor: "#2DC874",
-    padding: 10,
-    width: "50%",
-    marginTop: 30,
-    borderBottomColor: "#27AE60",
-    borderBottomWidth: 5,
+    width: 100,
   },
   loginText: {
     fontWeight: 'bold',
@@ -84,9 +95,8 @@ const styles = StyleSheet.create({
   },
   loginInput: {
     marginLeft: 10,
-    width: "100%",
-    borderBottomColor: "#E74C3C",
-    fontSize: 20,
+    width: "90%",
+    fontSize: 24,
     padding: 5,
     marginBottom: 5,
   }

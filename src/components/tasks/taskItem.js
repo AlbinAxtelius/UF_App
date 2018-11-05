@@ -1,16 +1,25 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, CheckBox, Image } from 'react-native'
+import { Text, View, StyleSheet, Button, Image } from 'react-native'
 import Swipeable from 'react-native-swipeable'
 import CustomCheck from './customCheck'
-
-var checkIcon = require('../../images/icons/baseline_done_white_48.png');
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default TaskItem = (props) => {
+  let leftContent = props.completed ?
+    <View style={styles.checkView}><Ionicons name="md-close" size={40} color="white" style={styles.checkImage} /></View> :
+    <View style={styles.checkView}><Ionicons name="md-checkmark" size={40} color="white" style={styles.checkImage} /></View>
+
+
   return (
-    <Swipeable onLeftActionRelease={props.handleSwipe} leftContent={leftContent} >
+    <Swipeable
+      onLeftActionRelease={props.handleSwipe}
+      leftContent={leftContent} >
       <View style={styles.taskContainer}>
-        <CustomCheck checked={true} handlePress={props.handleSwipe} />
-        <Text style={styles.taskText}>{props.taskData.taskName}</Text>
+        <CustomCheck checked={props.checked} handlePress={props.handleSwipe} />
+        <View stlye={styles.taskTextView}>
+          <Text style={styles.taskText}>{props.taskData.taskName}</Text>
+          <Text style={styles.repText}>{ props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text>
+        </View>
       </View>
     </Swipeable>
   )
@@ -18,8 +27,8 @@ export default TaskItem = (props) => {
 
 const styles = StyleSheet.create({
   taskContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#95A5A6",
+    borderBottomWidth: .8,
+    borderBottomColor: "#BDC3C7",
     width: "100%",
     height: 80,
     padding: 20,
@@ -27,22 +36,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   taskText: {
+    marginLeft: 20,
     fontSize: 20,
-    marginLeft: 10,
     flex: 1
   },
   checkView: {
     backgroundColor: '#2ECC71',
-    height: 80, 
+    height: 80,
     width: "100%",
     alignItems: 'flex-end',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    position: "absolute"
   },
   checkImage: {
-    height: 50,
-    width: 50,
     marginRight: 20,
+  },
+  taskTextView: {
+    flex: 1
+  },
+  repText: {
+    marginLeft: 20,
+    fontSize: 10,
+    color: "#7F8C8D"
   }
 })
 
-const leftContent = <View style={styles.checkView}><Image style={styles.checkImage} source={checkIcon} ></Image></View>
+

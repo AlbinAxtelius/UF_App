@@ -1,5 +1,17 @@
 import React, { Component } from 'react'
-import { Text, View, StatusBar, StyleSheet, ScrollView, ListView, TouchableHighlight } from 'react-native'
+import {
+  Text,
+  View,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  Modal,
+  TouchableHighlight,
+  ActivityIndicator,
+  AsyncStorage,
+  Picker,
+  Alert
+} from 'react-native'
 import fire from '../../config/config'
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,17 +22,19 @@ export default class Tasks extends Component {
   constructor(props) {
     super(props);
 
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       tasks: [],
+      loading: true,
+      scrolling: false,
+      selectGroup: false,
+      groupId: "",
+      groups: []
     };
-    this.firebase = fire.database().ref().child(`/Tasks/${fire.auth().currentUser.uid}`);
-
+    this.db = fire.firestore();
   }
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: "Create task",
       headerLeft: (
         <TouchableHighlight onPress={() => navigation.openDrawer()} style={{ marginLeft: 24, }}>
           <Ionicons name="md-menu" size={24} color="black" />
@@ -29,44 +43,91 @@ export default class Tasks extends Component {
     }
   }
 
-  componentWillMount() {
-    this.firebase.child(`/Active`).on('child_added', snap => {
-      let oldTasks = this.state.tasks;
-      oldTasks.push({
-        id: snap.key,
-        taskName: snap.val().taskName,
-      })
-      this.setState({ tasks: oldTasks })
+  componentWillMount = () => {
+    this.checkGroupId();
+  }
+
+  checkGroupId = async () => {
+    await AsyncStorage.getItem('groupId').then(groupId => {
+      if (groupId) {
+        this.setState({
+          selectGroup: false,
+          groupId: groupId
+        });
+        this.loadTasks();
+      } else {
+        this.db.collection('Users').doc(fire.auth().currentUser.uid)
+          .get()
+          .then(doc => {
+            const data = doc.data();
+            data.Groups.map(data => {
+              let oldGroups = this.state.groups;
+              oldGroups.push(data);
+
+              this.setState({
+                selectGroup: true,
+                groups: oldGroups
+              })
+            })
+          })
+      }
     })
   }
 
-  handleSwipeComplete(id) {
-    this.firebase.child(`/Active/${id}`).once('value', snap => {
-      this.firebase.child(`/Completed/${id}`).set(snap.val());
-      this.firebase.child(`/Active/${id}`).remove();
-    })
+  loadTasks = async () => {
+    this.db.collection('Groups').doc(this.state.groupId)
+      .get()
+      .then(doc => {
+        const data = doc.data();
+        data.Tasks.map(data => {
+          let oldTasks = this.state.tasks;
+          oldTasks.push(data);
+          this.setState({
+            tasks: oldTasks,
+            loading: false
+          })
+        })
+      })
+  }
 
-    var removeIndex = this.state.tasks.map(function (item) { return item.id; }).indexOf(id);
-
-    let oldTasks = this.state.tasks;
-    oldTasks.splice(removeIndex, 1);
-
-    this.setState({
-      tasks: oldTasks
-    })
+  handleGroupChange = async (groupId) => {
+    console.log(groupId)
+    await AsyncStorage.setItem('groupId', groupId)
+      .then(() => {
+        this.setState({ selectGroup: false })
+        this.checkGroupId();
+      })
   }
 
   render() {
+    let renderGroups = this.state.groups.map(data => {
+      return <Picker.Item key={data.groupId} label={data.groupName} value={data.groupId} />
+    })
+    let renderTasks = this.state.tasks.map(data => {
+      return <Text key={data.taskId}>{data.taskName}</Text>
+    })
     return (
       <View style={styles.container}>
-        <ScrollView>
-          {this.state.tasks.length > 0 ?
-            <ListView
-              enableEmptySections={true}
-              dataSource={this.ds.cloneWithRows(this.state.tasks)}
-              renderRow={rowData => <TaskItem handleSwipe={() => this.handleSwipeComplete(rowData.id)} taskData={rowData} />} />
-            : <Text style={styles.noTasksText}>All done :)</Text>}
-        </ScrollView>
+        {this.state.selectGroup &&
+          <Modal
+            animationType="fade"
+            onRequestClose={() => Alert.alert("Välj grupp", "Du måste välja en grupp")}>
+            <View style={styles.modal}>
+              <Picker
+                style={{ width: 200 }}
+                mode="dialog"
+                onValueChange={value => this.handleGroupChange(value)}>
+                <Picker.Item label="Välj grupp" />
+                {renderGroups}
+              </Picker>
+            </View>
+          </Modal>
+        }
+        {this.state.loading ?
+          <ActivityIndicator size="large" style={{ marginTop: 20 }} color="#2980B9" /> :
+          <ScrollView>
+            {renderTasks}
+          </ScrollView>}
         <TouchableHighlight
           activeOpacity={1}
           underlayColor={"#C0392B"}
@@ -74,7 +135,7 @@ export default class Tasks extends Component {
           onPress={() => { this.props.navigation.navigate('CreateTask') }}>
           <Text style={styles.addTaskText}>+</Text>
         </TouchableHighlight>
-      </View >
+      </View>
     )
   }
 }
@@ -83,6 +144,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  modal: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     borderTopWidth: StatusBar.currentHeight,

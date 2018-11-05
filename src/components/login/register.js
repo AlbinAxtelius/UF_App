@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, StatusBar, ScrollView, Image, Button } from 'react-native';
-import { Link } from 'react-router-native';
+import { View, TextInput, StyleSheet, StatusBar, ScrollView, Button } from 'react-native';
 import fire from '../../config/config';
-
-const backIcon = require('../../images/icons/baseline_arrow_back_white_48.png');
 
 export default class Register extends Component {
   constructor(props) {
@@ -97,8 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
-    borderTopWidth: StatusBar.currentHeight,
-    borderTopColor: "#27AE60",
   },
   header: {
     width: "100%",

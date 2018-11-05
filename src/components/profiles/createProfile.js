@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Text, View, CheckBox, TextInput, StyleSheet } from 'react-native'
+import { Text, View, CheckBox, TextInput, StyleSheet,Button } from 'react-native'
+import fire from '../../config/config';
 
 export default class CreateProfile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      uid: this.props.userData.uid,
       newProfile: {},
       name: "",
       admin: false,
@@ -14,17 +14,21 @@ export default class CreateProfile extends Component {
 
     }
   }
+
+  createProfile() {
+    fire.database().ref().child(`/Profiles/${fire.auth().currentUser.uid}`).push(this.state);
+    this.props.navigation.navigate("Profiles");
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Profile name</Text>
         <TextInput
-          style={styles.loginInput}
+          style={styles.profileName}
           value={this.state.name}
           onChangeText={name => this.setState({ name })}
           placeholder="Profil namn">
         </TextInput>
-        <Text>Admin</Text>
         <View style={styles.adminView}>
           <CheckBox value={this.state.admin} onValueChange={admin => this.setState({ admin })}></CheckBox>
           {this.state.admin &&
@@ -35,6 +39,7 @@ export default class CreateProfile extends Component {
               onChangeText={pin => this.setState({ pin })}>
             </TextInput>}
         </View>
+        <Button onPress={this.createProfile.bind(this)} title="Create profile" />
       </View>
     )
   }
@@ -42,18 +47,17 @@ export default class CreateProfile extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: "white"
   },
   adminView: {
-    width: "100%",
-    flexDirection: 'row',
+    width: "95%",
   },
-  loginInput: {
-    marginLeft: 10,
-    width: "100%",
-    borderBottomColor: "#E74C3C",
-    fontSize: 20,
+  profileName: {
+    width: "95%",
+    marginTop: 16,
+    fontSize: 40,
     padding: 5,
-    marginBottom: 5,
   }
 })

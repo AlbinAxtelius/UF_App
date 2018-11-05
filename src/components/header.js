@@ -4,7 +4,7 @@ import { Text, View, StyleSheet } from 'react-native'
 export default class Header extends Component {
   render() {
     return (
-        <Text style={styles.h1}>{this.props.title}</Text>
+      <Text style={styles.h1}>{this.props.title}</Text>
     )
   }
 }
