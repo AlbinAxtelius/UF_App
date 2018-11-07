@@ -43,7 +43,7 @@ export default class Tasks extends Component {
     }
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.checkGroupId();
   }
 
@@ -75,13 +75,20 @@ export default class Tasks extends Component {
   }
 
   loadTasks = async () => {
-    this.db.collection('Groups').doc(this.state.groupId)
+    this.db
+      .collection('Groups')
+      .doc(this.state.groupId)
+      .collection('Tasks')
+      .where('completed', '==', false)
       .get()
-      .then(doc => {
-        const data = doc.data();
-        data.Tasks.map(data => {
-          let oldTasks = this.state.tasks;
-          oldTasks.push(data);
+      .then(snap => {
+        snap.docs.forEach(doc => {
+          data = doc.data();
+          let oldTasks = this.state.tasks
+          oldTasks.push({
+            id: doc.id,
+            title: data.taskName
+          });
           this.setState({
             tasks: oldTasks,
             loading: false
@@ -104,7 +111,7 @@ export default class Tasks extends Component {
       return <Picker.Item key={data.groupId} label={data.groupName} value={data.groupId} />
     })
     let renderTasks = this.state.tasks.map(data => {
-      return <Text key={data.taskId}>{data.taskName}</Text>
+      return <TaskItem key={data.id} title={data.title} />
     })
     return (
       <View style={styles.container}>

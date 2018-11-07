@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableHighlight, TextInput, StyleSheet, Picker } from 'react-native'
+import { Text, View, TouchableHighlight, AsyncStorage, TextInput, StyleSheet, Picker } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import fire from '../../../config/config';
 
@@ -7,7 +7,7 @@ export default class CreateTask extends Component {
   constructor(props) {
     super(props)
 
-    this.firebase = fire.database().ref().child(`/Tasks/${fire.auth().currentUser.uid}`);
+    this.db = fire.firestore();
 
     this.state = {
       taskName: "",
@@ -36,9 +36,21 @@ export default class CreateTask extends Component {
     this.props.navigation.setParams({ handleAccept: this.handleAccept.bind(this) })
   }
 
-  handleAccept() {
-    this.firebase.child("/Active").push(this.state);
-    this.props.navigation.navigate("Tasks");
+  handleAccept = async () => {
+    await AsyncStorage.getItem('groupId')
+      .then(groupdId => {
+        this.db
+          .collection('Groups')
+          .doc(groupdId)
+          .collection('Tasks')
+          .add({
+            taskName: this.state.taskName,
+            completed: false
+          })
+          .then(() =>
+            this.props.navigation.goBack()
+          )
+      })
   }
 
   handleChange(repCode) {

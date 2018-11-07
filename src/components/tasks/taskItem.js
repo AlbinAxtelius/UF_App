@@ -17,7 +17,7 @@ export default TaskItem = (props) => {
       <View style={styles.taskContainer}>
         <CustomCheck checked={props.checked} handlePress={props.handleSwipe} />
         <View stlye={styles.taskTextView}>
-          <Text style={styles.taskText}>{props.taskData.taskName}</Text>
+          <Text style={styles.taskText}>{props.title}</Text>
           <Text style={styles.repText}>{ props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text>
         </View>
       </View>
