@@ -13,7 +13,6 @@ import {
   Alert
 } from 'react-native'
 import fire from '../../config/config'
-import { Ionicons } from '@expo/vector-icons';
 
 import TaskItem from './taskItem'
 
@@ -28,50 +27,61 @@ export default class Tasks extends Component {
       scrolling: false,
       selectGroup: false,
       groupId: "",
-      groups: []
+      groups: [],
+      groupName: ""
     };
     this.db = fire.firestore();
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerLeft: (
-        <TouchableHighlight onPress={() => navigation.openDrawer()} style={{ marginLeft: 24, }}>
-          <Ionicons name="md-menu" size={24} color="black" />
-        </TouchableHighlight>
-      )
-    }
   }
 
   componentDidMount = () => {
     this.checkGroupId();
   }
 
-  checkGroupId = async () => {
-    await AsyncStorage.getItem('groupId').then(groupId => {
-      if (groupId) {
-        this.setState({
-          selectGroup: false,
-          groupId: groupId
-        });
-        this.loadTasks();
-      } else {
-        this.db.collection('Users').doc(fire.auth().currentUser.uid)
-          .get()
-          .then(doc => {
-            const data = doc.data();
-            data.Groups.map(data => {
-              let oldGroups = this.state.groups;
-              oldGroups.push(data);
+  getGroupName = () => {
+    this.db
+      .collection('Groups')
+      .doc(this.state.groupId)
+      .get()
+      .then(doc => {
+        data = doc.data();
 
-              this.setState({
-                selectGroup: true,
-                groups: oldGroups
+        this.setState({
+          groupName: data.displayName
+        })
+      })
+  };
+
+  checkGroupId = async () => {
+    await AsyncStorage
+      .getItem('groupId')
+      .then(groupId => {
+        if (groupId) {
+          this.setState({
+            selectGroup: false,
+            groupId: groupId
+          });
+          this.loadTasks();
+          this.getGroupName();
+
+        } else {
+          this.db
+            .collection('Users')
+            .doc(fire.auth().currentUser.uid)
+            .get()
+            .then(doc => {
+              const data = doc.data();
+              data.Groups.map(data => {
+                let oldGroups = this.state.groups;
+                oldGroups.push(data);
+
+                this.setState({
+                  selectGroup: true,
+                  groups: oldGroups
+                })
               })
             })
-          })
-      }
-    })
+        }
+      })
   }
 
   loadTasks = async () => {
@@ -133,6 +143,7 @@ export default class Tasks extends Component {
         {this.state.loading ?
           <ActivityIndicator size="large" style={{ marginTop: 20 }} color="#2980B9" /> :
           <ScrollView>
+            <Text>{this.state.groupName}</Text>
             {renderTasks}
           </ScrollView>}
         <TouchableHighlight

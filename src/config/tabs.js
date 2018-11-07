@@ -1,4 +1,4 @@
-import { createStackNavigator, createDrawerNavigator } from 'react-navigation'
+import { createStackNavigator, createDrawerNavigator, createBottomTabNavigator} from 'react-navigation'
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -69,15 +69,20 @@ export const ProfileStack = createStackNavigator({
   }
 })
 
-export const LoggedInDrawer = createDrawerNavigator({
+export const LoggedInDrawer = createBottomTabNavigator({
   Tasks: {
-    screen: TaskStack
+    screen: TaskStack,
+    navigationOptions: {
+      drawerLabel: "Tasks",
+      tabBarIcon: <Ionicons size={26} name="md-checkmark-circle-outline" color="black" />
+    }
   },
   Completed: {
     screen: CompletedStack,
+    
     navigationOptions: {
       drawerLabel: "Completed",
-      drawerIcon: <Ionicons size={28} name="md-done-all" color="black" />
+      tabBarIcon: <Ionicons size={26} name="md-done-all" color="black" />
     }
   },
   Profiles: {
