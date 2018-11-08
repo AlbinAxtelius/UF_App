@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Button, Image } from 'react-native'
+import { Text, View, StyleSheet,Animated, Button, Image } from 'react-native'
 import Swipeable from 'react-native-swipeable'
 import CustomCheck from './customCheck'
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -12,13 +12,16 @@ export default TaskItem = (props) => {
 
   return (
     <Swipeable
+      onPanAnimatedValueRef={() => {
+        new Animated.ValueXY({x: 15, y:15})
+      }}
       onLeftActionRelease={props.handleSwipe}
       leftContent={leftContent} >
       <View style={styles.taskContainer}>
         <CustomCheck checked={props.checked} handlePress={props.handleSwipe} />
         <View stlye={styles.taskTextView}>
           <Text style={styles.taskText}>{props.title}</Text>
-          <Text style={styles.repText}>{ props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text>
+          <Text style={styles.repText}>{props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text>
         </View>
       </View>
     </Swipeable>

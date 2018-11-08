@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableHighlight, AsyncStorage, TextInput, StyleSheet, Picker } from 'react-native'
+import { Text, View, TouchableHighlight, AsyncStorage, TextInput, StyleSheet, Picker, TouchableNativeFeedback } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import fire from '../../../config/config';
 
@@ -20,14 +20,22 @@ export default class CreateTask extends Component {
     return {
       title: "Create task",
       headerRight: (
-        <TouchableHighlight onPress={navigation.getParam('handleAccept')} style={{ marginRight: 24, }}>
-          <Ionicons name="md-checkmark" size={24} color="black" />
-        </TouchableHighlight>
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+          onPress={navigation.getParam('handleAccept')} >
+          <View style={{ marginRight: 18, backgroundColor: "white" }}>
+            <Ionicons name="md-checkmark" size={28} color="black" />
+          </View>
+        </TouchableNativeFeedback>
       ),
       headerLeft: (
-        <TouchableHighlight onPress={() => navigation.goBack()} style={{ marginLeft: 24, }}>
-          <Ionicons name="md-close" size={24} color="black" />
-        </TouchableHighlight>
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+          onPress={() => navigation.goBack()} >
+          <View style={{ marginLeft: 24, }}>
+            <Ionicons name="md-close" size={28} color="black" />
+          </View>
+        </TouchableNativeFeedback>
       )
     }
   }

@@ -10,11 +10,14 @@ import {
   ActivityIndicator,
   AsyncStorage,
   Picker,
-  Alert
+  Alert,
+  RefreshControl,
+  TouchableNativeFeedback
 } from 'react-native'
 import fire from '../../config/config'
 
 import TaskItem from './taskItem'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export default class Tasks extends Component {
@@ -28,13 +31,27 @@ export default class Tasks extends Component {
       selectGroup: false,
       groupId: "",
       groups: [],
-      groupName: ""
+      groupName: "",
+      refreshing: false
     };
     this.db = fire.firestore();
   }
 
   componentDidMount = () => {
     this.checkGroupId();
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerRight: (
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+          onPress={() => navigation.navigate('CreateTask')}>
+          <View style={{ backgroundColor: "white", marginRight: 18 }}>
+            <Ionicons name="md-add" size={28} />
+          </View>
+        </TouchableNativeFeedback>)
+    }
   }
 
   getGroupName = () => {
@@ -44,9 +61,8 @@ export default class Tasks extends Component {
       .get()
       .then(doc => {
         data = doc.data();
-
         this.setState({
-          groupName: data.displayName
+          groupName: data.groupName
         })
       })
   };
@@ -85,6 +101,7 @@ export default class Tasks extends Component {
   }
 
   loadTasks = async () => {
+    this.setState({ tasks: [], loading: true })
     this.db
       .collection('Groups')
       .doc(this.state.groupId)
@@ -101,11 +118,33 @@ export default class Tasks extends Component {
           });
           this.setState({
             tasks: oldTasks,
-            loading: false
+            loading: false,
+            refreshing: false
           })
         })
       })
   }
+
+  handleSwipe = id => {
+    this.db
+      .collection('Groups')
+      .doc(this.state.groupId)
+      .collection('Tasks')
+      .doc(id)
+      .update({ completed: true })
+      .then(() => {
+        for (let i = 0; i < this.state.tasks.length; i++) {
+          if (id === this.state.tasks[i].id) {
+            const tasks = this.state.tasks;
+            tasks.splice(i, 1);
+            this.setState({
+              tasks
+            })
+          }
+        }
+      })
+  }
+
 
   handleGroupChange = async (groupId) => {
     console.log(groupId)
@@ -121,7 +160,7 @@ export default class Tasks extends Component {
       return <Picker.Item key={data.groupId} label={data.groupName} value={data.groupId} />
     })
     let renderTasks = this.state.tasks.map(data => {
-      return <TaskItem key={data.id} title={data.title} />
+      return <TaskItem handleSwipe={() => this.handleSwipe(data.id)} key={data.id} title={data.title} />
     })
     return (
       <View style={styles.container}>
@@ -142,17 +181,15 @@ export default class Tasks extends Component {
         }
         {this.state.loading ?
           <ActivityIndicator size="large" style={{ marginTop: 20 }} color="#2980B9" /> :
-          <ScrollView>
-            <Text>{this.state.groupName}</Text>
+          <ScrollView
+            refreshControl={<RefreshControl
+            style={{height: 0}}
+              refreshing={this.state.refreshing}
+              onRefresh={this.loadTasks} />}
+          >
+            <Text style={styles.groupName}>{this.state.groupName}</Text>
             {renderTasks}
           </ScrollView>}
-        <TouchableHighlight
-          activeOpacity={1}
-          underlayColor={"#C0392B"}
-          style={styles.addTaskView}
-          onPress={() => { this.props.navigation.navigate('CreateTask') }}>
-          <Text style={styles.addTaskText}>+</Text>
-        </TouchableHighlight>
       </View>
     )
   }
@@ -169,44 +206,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    borderTopWidth: StatusBar.currentHeight,
-    borderTopColor: "#2ECC71",
-    height: 90,
-    justifyContent: 'center',
-    elevation: 12,
-    backgroundColor: "#2ECC71"
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    width: "100%",
-    textAlign: "center",
-    color: "#fff",
-  },
-  addTaskView: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    right: 20,
-    bottom: 20,
-    padding: 20,
-    backgroundColor: "#E74C3C",
-    borderRadius: 30,
-    elevation: 4,
-  },
-  addTaskText: {
-    color: "white",
-    lineHeight: 40,
-    fontWeight: 'bold',
-    fontSize: 30
-  },
   noTasksText: {
     textAlign: 'center',
     fontSize: 24,
     marginTop: 48,
     fontWeight: 'bold',
+  },
+  groupName: {
+    textAlign: 'center',
+    fontSize: 24,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: "#2C3E50",
+    color: "white", 
+    borderBottomColor: "black",
+    borderBottomWidth: .5,
   }
 })
