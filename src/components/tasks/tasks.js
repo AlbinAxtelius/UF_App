@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Picker,
   TouchableNativeFeedback,
+  AsyncStorage
 } from 'react-native'
 import fire from '../../config/config'
 
@@ -25,18 +26,35 @@ export default class Tasks extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerRight: (
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-          onPress={() => navigation.navigate('CreateTask')}>
-          <View style={{ backgroundColor: "white", marginRight: 18 }}>
-            <Ionicons name="md-add" size={28} />
-          </View>
-        </TouchableNativeFeedback>)
+        <View style={{flexDirection: "row"}}>
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+            onPress={() => navigation.navigate('CreateTask')}>
+            <View style={{ backgroundColor: "white", marginRight: 18 }}>
+              <Ionicons name="md-information-circle" size={28} />
+            </View>
+          </TouchableNativeFeedback>
+
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+            onPress={() => navigation.navigate('CreateTask')}>
+            <View style={{ backgroundColor: "white", marginRight: 18 }}>
+              <Ionicons name="md-add" size={28} />
+            </View>
+          </TouchableNativeFeedback>
+        </View>)
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     this.getGroups();
+
+    await AsyncStorage.getItem('groupId', ((e, groupId) => {
+      if (groupId) {
+        this.setState({ groupId });
+      }
+      console.log(`${groupId} was set`)
+    }))
   }
 
   getGroups = async () => {
@@ -57,8 +75,10 @@ export default class Tasks extends Component {
       })
   }
 
-  handleChange = groupId => {
-    this.setState({ groupId })
+  handleChange = async (groupId) => {
+    this.setState({ groupId });
+    await AsyncStorage.setItem('groupId', groupId)
+      .catch(e => console.log(e))
   }
 
   render() {
@@ -69,24 +89,12 @@ export default class Tasks extends Component {
       <View style={styles.container}>
         <Picker
           selectedValue={this.state.groupId}
-          onValueChange={value => this.handleChange(value)}>
+          onValueChange={value => this.handleChange(value)}
+          style={styles.picker}
+        >
           {renderGroups}
         </Picker>
         <TaskWrapper activeGroup={this.state.groupId} />
-        {/* {this.state.loading ?
-          <ActivityIndicator size="large" style={{ marginTop: 20 }} color="#2980B9" /> :
-          <React.Fragment>
-            <GroupView checkGroupId={() => this.refresh()} groupId={this.state.groupId} />
-            <ScrollView
-              refreshControl={<RefreshControl
-                style={{ height: 0 }}
-                refreshing={this.state.refreshing}
-                onRefresh={this.loadTasks} />}
-            >
-              <Text style={styles.groupName}>{this.state.groupName}</Text>
-              {renderTasks}
-            </ScrollView>
-          </React.Fragment>} */}
       </View>
     )
   }
@@ -97,26 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  modal: {
-    flex: 1,
-    backgroundColor: "white",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noTasksText: {
-    textAlign: 'center',
-    fontSize: 24,
-    marginTop: 48,
-    fontWeight: 'bold',
-  },
-  groupName: {
-    textAlign: 'center',
-    fontSize: 24,
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: "#2C3E50",
-    color: "white",
-    borderBottomColor: "black",
-    borderBottomWidth: .5,
+  picker: {
+    backgroundColor: "#1ABC9C",
   }
 })

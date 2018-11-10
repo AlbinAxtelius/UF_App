@@ -3,7 +3,9 @@ import {
   Text,
   View,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native'
 import fire from '../../config/config'
 
@@ -15,7 +17,9 @@ export default class TaskWrapper extends Component {
 
     this.state = {
       groupId: "",
-      tasks: []
+      tasks: [],
+      refreshing: false,
+      loading: true
     }
 
     this.db = fire.firestore();
@@ -32,6 +36,7 @@ export default class TaskWrapper extends Component {
 
   getTasks = (groupId) => {
     if (groupId !== "") {
+      this.setState({ loading: true })
       this.db
         .collection('Groups')
         .doc(groupId)
@@ -46,20 +51,43 @@ export default class TaskWrapper extends Component {
               taskName: doc.data().taskName
             })
           })
-          this.setState({ tasks })
+          this.setState({ tasks: tasks, loading: false })
         }).catch(e => console.log(e))
     }
   }
 
+  finishTask = taskId => {
+    this.db
+      .collection('Groups')
+      .doc(this.state.groupId)
+      .collection('Tasks')
+      .doc(taskId)
+      .update({ completed: true });
+
+    let tasks = this.state.tasks;
+
+    for (let i = 0; i < tasks.length; i++) {
+      if (tasks[i].id === taskId) {
+        tasks.splice(i, 1);
+      }
+    }
+    this.setState({ tasks });
+  }
+
   render() {
     let renderTasks = this.state.tasks.map(m => {
-      return <TaskItem key={m.id} title={m.taskName} />
+      return <TaskItem handleSwipe={() => this.finishTask(m.id)} key={m.id} title={m.taskName} />
     })
     return (
       <View>
-        <ScrollView >
-          {renderTasks}
-        </ScrollView>
+        {this.state.loading ? <ActivityIndicator size="large" /> :
+          <ScrollView
+            refreshControl={<RefreshControl
+              style={{ height: 0 }}
+              refreshing={this.state.refreshing}
+              onRefresh={() => this.getTasks(this.state.groupId)} />}>
+            {renderTasks}
+          </ScrollView>}
       </View>
     )
   }
