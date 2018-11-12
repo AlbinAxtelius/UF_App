@@ -55,8 +55,10 @@ export default class CreateTask extends Component {
             taskName: this.state.taskName,
             completed: false
           })
-          .then(() =>
-            this.props.navigation.goBack()
+          .then(() => {
+            this.props.navigation.state.params.onAccept;
+            this.props.navigation.goBack();
+          }
           )
       })
   }

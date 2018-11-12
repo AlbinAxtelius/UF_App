@@ -18,7 +18,8 @@ export default class Tasks extends Component {
 
     this.state = {
       groupId: "",
-      groups: []
+      groups: [],
+      refresh: true
     };
     this.db = fire.firestore();
   }
@@ -26,15 +27,21 @@ export default class Tasks extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerRight: (
-        <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row" }}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-            onPress={() => navigation.navigate('CreateTask')}>
+            onPress={() => navigation.navigate('GroupInfo')}>
             <View style={{ backgroundColor: "white", marginRight: 18 }}>
               <Ionicons name="md-information-circle" size={28} />
             </View>
           </TouchableNativeFeedback>
-
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+            onPress={() => navigation.navigate('GroupInfo')}>
+            <View style={{ backgroundColor: "white", marginRight: 18 }}>
+              <Ionicons name="md-person-add" size={28} />
+            </View>
+          </TouchableNativeFeedback>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
             onPress={() => navigation.navigate('CreateTask')}>
@@ -81,6 +88,11 @@ export default class Tasks extends Component {
       .catch(e => console.log(e))
   }
 
+  refresh = () => {
+    console.log("hej")
+    this.child.getTasks(this.state.groupId);
+  }
+
   render() {
     let renderGroups = this.state.groups.map(data => {
       return <Picker.Item key={data.groupId} label={data.groupName} value={data.groupId} />
@@ -94,7 +106,7 @@ export default class Tasks extends Component {
         >
           {renderGroups}
         </Picker>
-        <TaskWrapper activeGroup={this.state.groupId} />
+        <TaskWrapper onRef={ref => (this.child = ref)} activeGroup={this.state.groupId} />
       </View>
     )
   }

@@ -1,4 +1,4 @@
-import { createStackNavigator, createDrawerNavigator, createBottomTabNavigator} from 'react-navigation'
+import { createStackNavigator, createDrawerNavigator, createBottomTabNavigator } from 'react-navigation'
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,6 +10,7 @@ import CreateTask from '../components/tasks/createTask/createTask';
 import Completed from '../components/tasks/completed/completed';
 import Profiles from '../components/profiles/profiles';
 import CreateProfile from '../components/profiles/createProfile';
+import GroupInfo from '../components/group/manageGroup';
 
 import Drawer from '../components/menu/drawer';
 
@@ -41,7 +42,9 @@ export const TaskStack = createStackNavigator({
   },
   CreateTask: {
     screen: CreateTask,
-
+  },
+  GroupInfo: {
+    screen: GroupInfo
   }
 })
 
@@ -74,21 +77,14 @@ export const LoggedInDrawer = createBottomTabNavigator({
     screen: TaskStack,
     navigationOptions: {
       drawerLabel: "Tasks",
-      tabBarIcon: <Ionicons size={26} name="md-checkmark-circle-outline" color="black" />
-    }
-  },
-  Completed: {
-    screen: CompletedStack,
-    
-    navigationOptions: {
-      drawerLabel: "Completed",
-      tabBarIcon: <Ionicons size={26} name="md-done-all" color="black" />
+      tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />
     }
   },
   Profiles: {
     screen: ProfileStack,
     navigationOptions: {
-      drawerLabel: "Switch profile",
+      title: "Profile",
+      tabBarIcon: <Ionicons size={26} name="md-contact" color="black" />
     }
   }
 }, {

@@ -11,7 +11,6 @@ export default TaskItem = (props) => {
 
   return (
     <Swipeable
-      
       onLeftActionRelease={props.handleSwipe}
       leftContent={leftContent} >
       <View style={styles.taskContainer}>

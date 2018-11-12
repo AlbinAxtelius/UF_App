@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage } from 'react-native';
+import { View, Text, AsyncStorage, ScrollView, StyleSheet } from 'react-native';
 import fire from '../../config/config';
 
 export default class ManageGroup extends Component {
@@ -9,8 +9,15 @@ export default class ManageGroup extends Component {
     this.db = fire.firestore();
 
     this.state = {
-      groupInfo: {}
+      groupInfo: {},
+      members: []
     };
+  }
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state
+    return {
+      headerTitle: params.title
+    }
   }
 
   componentWillMount = async () => {
@@ -19,17 +26,47 @@ export default class ManageGroup extends Component {
         .collection('Groups')
         .doc(groupId)
         .get()
-        .then(data => {
-          this.setState({ groupInfo: data.data() })
+        .then(doc => {
+          const data = doc.data();
+          let members = []
+          data.Members.forEach(m => {
+            members.push({
+              id: m.userId,
+              displayName: m.displayName
+            })
+          })
+          this.setState({
+            members: members
+          })
+          this.props.navigation.setParams({
+            title: data.groupName
+          })
         })
     })
   }
 
   render() {
+    let renderUsers = this.state.members.map(m => {
+      return <Text key={m.id}>{m.displayName}</Text>
+    })
     return (
-      <View>
-        <Text> textInComponent </Text>
+      <View style={styles.groupView}>
+        <View style={styles.members}>
+          <Text>Users:</Text>
+          {renderUsers}
+        </View>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  groupView: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: 'center',
+  },
+  members: {
+    width: "90%",
+  }
+})
