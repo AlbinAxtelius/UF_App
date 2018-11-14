@@ -31,22 +31,8 @@ export default class Tasks extends Component {
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
             onPress={() => navigation.navigate('GroupInfo')}>
-            <View style={{ backgroundColor: "white", marginRight: 18 }}>
-              <Ionicons name="md-information-circle" size={28} />
-            </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-            onPress={() => navigation.navigate('GroupInfo')}>
-            <View style={{ backgroundColor: "white", marginRight: 18 }}>
-              <Ionicons name="md-person-add" size={28} />
-            </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-            onPress={() => navigation.navigate('CreateTask')}>
-            <View style={{ backgroundColor: "white", marginRight: 18 }}>
-              <Ionicons name="md-add" size={28} />
+            <View style={{ marginRight: 18 }}>
+              <Ionicons name="md-person-add" color="white" size={28} />
             </View>
           </TouchableNativeFeedback>
         </View>)
@@ -107,6 +93,14 @@ export default class Tasks extends Component {
           {renderGroups}
         </Picker>
         <TaskWrapper onRef={ref => (this.child = ref)} activeGroup={this.state.groupId} />
+        <TouchableNativeFeedback
+          style={{ borderRadius: 40 }}
+          background={TouchableNativeFeedback.SelectableBackground()}
+          onPress={() => this.props.navigation.navigate('CreateTask')}>
+          <View style={styles.addView}>
+            <Ionicons name="md-add" color="white" size={38} />
+          </View>
+        </TouchableNativeFeedback>
       </View>
     )
   }
@@ -118,6 +112,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   picker: {
-    backgroundColor: "#1ABC9C",
+    backgroundColor: "#76B397",
+  },
+  addView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 15,
+    bottom: 15,
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    elevation: 2,
+    backgroundColor: "#66392F"
   }
 })

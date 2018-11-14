@@ -38,14 +38,17 @@ export const TaskStack = createStackNavigator({
     screen: Tasks,
     navigationOptions: {
       title: "Tasks",
+      headerStyle: {
+        backgroundColor: '#156352',
+      },
+      headerTitleStyle: {
+        color: "white"
+      }
     }
   },
   CreateTask: {
     screen: CreateTask,
   },
-  GroupInfo: {
-    screen: GroupInfo
-  }
 })
 
 export const CompletedStack = createStackNavigator({
@@ -80,13 +83,20 @@ export const LoggedInDrawer = createBottomTabNavigator({
       tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />
     }
   },
+  GroupInfo: {
+    screen: GroupInfo,
+    navigationOptions: {
+      title: "Group",
+      tabBarIcon: <Ionicons size={26} name="md-settings" color="black" />
+    }
+  },
   Profiles: {
     screen: ProfileStack,
     navigationOptions: {
       title: "Profile",
       tabBarIcon: <Ionicons size={26} name="md-contact" color="black" />
     }
-  }
+  },
 }, {
     contentComponent: Drawer,
     contentOptions: {
