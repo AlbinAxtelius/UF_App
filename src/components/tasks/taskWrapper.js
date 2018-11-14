@@ -25,14 +25,7 @@ export default class TaskWrapper extends Component {
     this.db = fire.firestore();
   }
 
-  componentDidMount() {
-    this.props.onRef(this)
-  }
-  componentWillUnmount() {
-    this.props.onRef(undefined)
-  }
-
-  componentWillReceiveProps = (nextProps) => {
+   componentWillReceiveProps = (nextProps) => {
     if (this.state.groupId != nextProps.activeGroup) {
       this.setState({
         groupId: nextProps.activeGroup,
@@ -88,7 +81,7 @@ export default class TaskWrapper extends Component {
       return <TaskItem handleSwipe={() => this.finishTask(m.id)} key={m.id} title={m.taskName} />
     })
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         {this.state.loading ? <ActivityIndicator size="large" /> :
           <ScrollView
             refreshControl={<RefreshControl

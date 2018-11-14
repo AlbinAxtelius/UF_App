@@ -10,7 +10,7 @@ import fire from '../../config/config'
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import TaskWrapper from './taskWrapper';
-
+import {MainBottomNav} from '../../config/tabs'
 
 export default class Tasks extends Component {
   constructor(props) {
@@ -92,7 +92,7 @@ export default class Tasks extends Component {
         >
           {renderGroups}
         </Picker>
-        <TaskWrapper onRef={ref => (this.child = ref)} activeGroup={this.state.groupId} />
+        <MainBottomNav activeGroup={this.state.groupId} />
         <TouchableNativeFeedback
           style={{ borderRadius: 40 }}
           background={TouchableNativeFeedback.SelectableBackground()}

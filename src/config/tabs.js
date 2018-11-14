@@ -11,7 +11,7 @@ import Completed from '../components/tasks/completed/completed';
 import Profiles from '../components/profiles/profiles';
 import CreateProfile from '../components/profiles/createProfile';
 import GroupInfo from '../components/group/manageGroup';
-
+import TaskWrapper from '../components/tasks/taskWrapper';
 import Drawer from '../components/menu/drawer';
 
 export const LoginStack = createStackNavigator({
@@ -20,7 +20,6 @@ export const LoginStack = createStackNavigator({
     navigationOptions: {
       title: 'Login',
       headerTitleContainerStyle: {
-
       }
     }
   },
@@ -33,7 +32,7 @@ export const LoginStack = createStackNavigator({
 }
 );
 
-export const TaskStack = createStackNavigator({
+export const MainStack = createStackNavigator({
   Tasks: {
     screen: Tasks,
     navigationOptions: {
@@ -51,33 +50,10 @@ export const TaskStack = createStackNavigator({
   },
 })
 
-export const CompletedStack = createStackNavigator({
-  Completed: {
-    screen: Completed,
-    navigationOptions: {
-      title: "Completed",
-      headerTitleStyle: {
-        flex: 1,
-      }
-    }
-  }
-})
 
-export const ProfileStack = createStackNavigator({
-  Profiles: {
-    screen: Profiles,
-    navigationOptions: {
-      title: "Profiles"
-    }
-  },
-  CreateProfile: {
-    screen: CreateProfile
-  }
-})
-
-export const LoggedInDrawer = createBottomTabNavigator({
-  Tasks: {
-    screen: TaskStack,
+export const MainBottomNav = createBottomTabNavigator({
+  Home: {
+    screen: (props) => <TaskWrapper {...props}  activeGroup="hejsan"/>,
     navigationOptions: {
       drawerLabel: "Tasks",
       tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />
@@ -88,13 +64,6 @@ export const LoggedInDrawer = createBottomTabNavigator({
     navigationOptions: {
       title: "Group",
       tabBarIcon: <Ionicons size={26} name="md-settings" color="black" />
-    }
-  },
-  Profiles: {
-    screen: ProfileStack,
-    navigationOptions: {
-      title: "Profile",
-      tabBarIcon: <Ionicons size={26} name="md-contact" color="black" />
     }
   },
 }, {
@@ -109,7 +78,7 @@ export const LoggedInDrawer = createBottomTabNavigator({
 
 export const AuthStack = createStackNavigator({
   Auth: LoginStack,
-  App: LoggedInDrawer,
+  App: MainStack,
   AuthLoading: AuthLoading
 },
   {
