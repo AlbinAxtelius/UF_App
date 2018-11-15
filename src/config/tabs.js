@@ -53,7 +53,7 @@ export const MainStack = createStackNavigator({
 
 export const MainBottomNav = createBottomTabNavigator({
   Home: {
-    screen: (props) => <TaskWrapper {...props}  activeGroup="hejsan"/>,
+    screen: (props) => <TaskWrapper {...props} />,
     navigationOptions: {
       drawerLabel: "Tasks",
       tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />
@@ -67,11 +67,13 @@ export const MainBottomNav = createBottomTabNavigator({
     }
   },
 }, {
-    contentComponent: Drawer,
     contentOptions: {
       activeTintColor: '#e91e63',
       itemsContainerStyle: {
         flex: 1,
+      },
+      tabBarOptions : {
+        activeTintColor : "red"
       }
     }
   });

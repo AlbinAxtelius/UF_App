@@ -25,7 +25,7 @@ export default class TaskWrapper extends Component {
     this.db = fire.firestore();
   }
 
-   componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = (nextProps) => {
     if (this.state.groupId != nextProps.activeGroup) {
       this.setState({
         groupId: nextProps.activeGroup,
@@ -82,6 +82,9 @@ export default class TaskWrapper extends Component {
     })
     return (
       <View style={styles.container}>
+        <Text>
+           f §{this.props.screenProps}
+        </Text>
         {this.state.loading ? <ActivityIndicator size="large" /> :
           <ScrollView
             refreshControl={<RefreshControl
