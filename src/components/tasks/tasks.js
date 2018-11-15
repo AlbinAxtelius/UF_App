@@ -8,11 +8,15 @@ import {
 } from 'react-native'
 import fire from '../../config/config'
 
+import { connect } from 'react-redux';
+import { setGroupId } from '../../actions/groupActions';
+
+
 import Ionicons from '@expo/vector-icons/Ionicons';
 import TaskWrapper from './taskWrapper';
-import {MainBottomNav} from '../../config/tabs'
+import { MainBottomNav } from '../../config/tabs'
 
-export default class Tasks extends Component {
+class Tasks extends Component {
   constructor(props) {
     super(props);
 
@@ -45,6 +49,7 @@ export default class Tasks extends Component {
     await AsyncStorage.getItem('groupId', ((e, groupId) => {
       if (groupId) {
         this.setState({ groupId });
+        this.props.setGroupId(groupId);
       }
       console.log(`${groupId} was set`)
     }))
@@ -72,6 +77,7 @@ export default class Tasks extends Component {
     this.setState({ groupId });
     await AsyncStorage.setItem('groupId', groupId)
       .catch(e => console.log(e))
+    this.props.setGroupId(groupId);
   }
 
   refresh = () => {
@@ -105,6 +111,8 @@ export default class Tasks extends Component {
     )
   }
 }
+
+export default connect(null, { setGroupId })(Tasks)
 
 const styles = StyleSheet.create({
   container: {

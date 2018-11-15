@@ -8,10 +8,12 @@ import {
   ActivityIndicator
 } from 'react-native'
 import fire from '../../config/config'
+import { connect } from 'react-redux'
+import { getGroupId } from '../../actions/groupActions'
 
 import TaskItem from './taskItem'
 
-export default class TaskWrapper extends Component {
+class TaskWrapper extends Component {
   constructor(props) {
     super(props);
 
@@ -25,12 +27,16 @@ export default class TaskWrapper extends Component {
     this.db = fire.firestore();
   }
 
+  componentDidMount = () => {
+    this.props.getGroupId();
+  }
+
   componentWillReceiveProps = (nextProps) => {
-    if (this.state.groupId != nextProps.activeGroup) {
+    if (this.state.groupId != nextProps.groupId) {
       this.setState({
-        groupId: nextProps.activeGroup,
+        groupId: nextProps.groupId,
       })
-      this.getTasks(nextProps.activeGroup);
+      this.getTasks(nextProps.groupId);
     } else {
       this.getTasks(this.state.groupId);
     }
@@ -38,23 +44,25 @@ export default class TaskWrapper extends Component {
 
   getTasks = (groupId) => {
     if (groupId !== "") {
-      this.setState({ loading: true })
-      this.db
-        .collection('Groups')
-        .doc(groupId)
-        .collection('Tasks')
-        .where('completed', '==', false)
-        .get()
-        .then(col => {
-          let tasks = [];
-          col.docs.forEach(doc => {
-            tasks.push({
-              id: doc.id,
-              taskName: doc.data().taskName
+      if (groupId !== undefined) {
+        this.setState({ loading: true })
+        this.db
+          .collection('Groups')
+          .doc(groupId)
+          .collection('Tasks')
+          .where('completed', '==', false)
+          .get()
+          .then(col => {
+            let tasks = [];
+            col.docs.forEach(doc => {
+              tasks.push({
+                id: doc.id,
+                taskName: doc.data().taskName
+              })
             })
-          })
-          this.setState({ tasks: tasks, loading: false })
-        }).catch(e => console.log(e))
+            this.setState({ tasks: tasks, loading: false })
+          }).catch(e => console.log(e))
+      }
     }
   }
 
@@ -82,9 +90,6 @@ export default class TaskWrapper extends Component {
     })
     return (
       <View style={styles.container}>
-        <Text>
-           f §{this.props.screenProps}
-        </Text>
         {this.state.loading ? <ActivityIndicator size="large" /> :
           <ScrollView
             refreshControl={<RefreshControl
@@ -97,6 +102,12 @@ export default class TaskWrapper extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  groupId: state.groups.groupId
+})
+
+export default connect(mapStateToProps, { getGroupId })(TaskWrapper)
 
 const styles = StyleSheet.create({
   container: {

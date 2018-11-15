@@ -1,0 +1,7 @@
+const GET_GROUP_ID = "GET_GROUP_ID";
+const SET_GROUP_ID = "SET_GROUP_ID";
+
+export  {
+  GET_GROUP_ID,
+  SET_GROUP_ID
+}

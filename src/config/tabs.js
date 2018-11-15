@@ -72,9 +72,6 @@ export const MainBottomNav = createBottomTabNavigator({
       itemsContainerStyle: {
         flex: 1,
       },
-      tabBarOptions : {
-        activeTintColor : "red"
-      }
     }
   });
 
