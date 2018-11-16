@@ -1,48 +1,63 @@
 import React, { Component } from 'react';
 import { View, Text, AsyncStorage, ScrollView, StyleSheet } from 'react-native';
 import fire from '../../config/config';
+import { connect } from 'react-redux'
+import { getGroupId } from '../../actions/groupActions'
 
-export default class ManageGroup extends Component {
+class ManageGroup extends Component {
   constructor(props) {
     super(props);
 
-    this.db = fire.firestore();
-
     this.state = {
       groupInfo: {},
-      members: []
+      members: [],
+      groupId: "",
+      loading: true
     };
+
+    this.db = fire.firestore();
   }
-  static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state
-    return {
-      headerTitle: params.title
+
+  componentDidMount = () => {
+    this.props.getGroupId();
+    this.getGroupInfo(this.props.groupId)
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    console.log("hej")
+    if (this.state.groupId != nextProps.groupId) {
+      this.setState({
+        groupId: nextProps.groupId,
+      })
+      this.getGroupInfo(nextProps.groupId);
+    } else {
+      this.getGroupInfo(this.state.groupId);
     }
   }
 
-  componentWillMount = async () => {
-    await AsyncStorage.getItem('groupId', (e, groupId) => {
-      this.db
-        .collection('Groups')
-        .doc(groupId)
-        .get()
-        .then(doc => {
-          const data = doc.data();
-          let members = []
-          data.Members.forEach(m => {
-            members.push({
-              id: m.userId,
-              displayName: m.displayName
+  getGroupInfo = (groupId) => {
+    if (groupId !== "") {
+      if (groupId !== undefined) {
+        this.db
+          .collection('Groups')
+          .doc(groupId)
+          .get()
+          .then(doc => {
+            const data = doc.data();
+            let members = []
+            data.Members.forEach(m => {
+              members.push({
+                id: m.userId,
+                displayName: m.displayName
+              })
+            })
+            this.setState({
+              members: members,
+              loading: false
             })
           })
-          this.setState({
-            members: members
-          })
-          this.props.navigation.setParams({
-            title: data.groupName
-          })
-        })
-    })
+      }
+    }
   }
 
   render() {
@@ -51,14 +66,22 @@ export default class ManageGroup extends Component {
     })
     return (
       <View style={styles.groupView}>
-        <View style={styles.members}>
-          <Text>Users:</Text>
-          {renderUsers}
-        </View>
+        {this.state.loading ? <Text>Loading</Text> :
+          <View style={styles.members}>
+            <Text>Users:</Text>
+            {renderUsers}
+          </View>
+        }
       </View>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  groupId: state.groups.groupId
+})
+
+export default connect(mapStateToProps, { getGroupId })(ManageGroup)
 
 const styles = StyleSheet.create({
   groupView: {

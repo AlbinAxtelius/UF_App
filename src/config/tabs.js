@@ -7,12 +7,8 @@ import Register from '../components/login/register';
 import Tasks from '../components/tasks/tasks';
 import AuthLoading from '../components/login/authLoading';
 import CreateTask from '../components/tasks/createTask/createTask';
-import Completed from '../components/tasks/completed/completed';
-import Profiles from '../components/profiles/profiles';
-import CreateProfile from '../components/profiles/createProfile';
 import GroupInfo from '../components/group/manageGroup';
 import TaskWrapper from '../components/tasks/taskWrapper';
-import Drawer from '../components/menu/drawer';
 
 export const LoginStack = createStackNavigator({
   Login: {
@@ -53,7 +49,7 @@ export const MainStack = createStackNavigator({
 
 export const MainBottomNav = createBottomTabNavigator({
   Home: {
-    screen: (props) => <TaskWrapper {...props} />,
+    screen: TaskWrapper,
     navigationOptions: {
       drawerLabel: "Tasks",
       tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />

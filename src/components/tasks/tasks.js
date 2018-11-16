@@ -13,7 +13,6 @@ import { setGroupId } from '../../actions/groupActions';
 
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import TaskWrapper from './taskWrapper';
 import { MainBottomNav } from '../../config/tabs'
 
 class Tasks extends Component {
@@ -80,11 +79,6 @@ class Tasks extends Component {
     this.props.setGroupId(groupId);
   }
 
-  refresh = () => {
-    console.log("hej")
-    this.child.getTasks(this.state.groupId);
-  }
-
   render() {
     let renderGroups = this.state.groups.map(data => {
       return <Picker.Item key={data.groupId} label={data.groupName} value={data.groupId} />
@@ -99,14 +93,6 @@ class Tasks extends Component {
           {renderGroups}
         </Picker>
         <MainBottomNav activeGroup={this.state.groupId} />
-        <TouchableNativeFeedback
-          style={{ borderRadius: 40 }}
-          background={TouchableNativeFeedback.SelectableBackground()}
-          onPress={() => this.props.navigation.navigate('CreateTask')}>
-          <View style={styles.addView}>
-            <Ionicons name="md-add" color="white" size={38} />
-          </View>
-        </TouchableNativeFeedback>
       </View>
     )
   }
@@ -121,17 +107,5 @@ const styles = StyleSheet.create({
   },
   picker: {
     backgroundColor: "#76B397",
-  },
-  addView: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    right: 15,
-    bottom: 15,
-    height: 60,
-    width: 60,
-    borderRadius: 30,
-    elevation: 2,
-    backgroundColor: "#66392F"
   }
 })

@@ -8,8 +8,7 @@ export default function (state = initialState, action) {
   switch (action.type) {
     case GET_GROUP_ID:
       return {
-        ...state,
-        groupId: action.payload
+        ...state
       }
     case SET_GROUP_ID:
       return {
