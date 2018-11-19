@@ -5,11 +5,13 @@ import {
   ScrollView,
   StyleSheet,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableNativeFeedback
 } from 'react-native'
 import fire from '../../config/config'
 import { connect } from 'react-redux'
 import { getGroupId } from '../../actions/groupActions'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import TaskItem from './taskItem'
 
@@ -98,6 +100,13 @@ class TaskWrapper extends Component {
               onRefresh={() => this.getTasks(this.state.groupId)} />}>
             {renderTasks}
           </ScrollView>}
+        <TouchableNativeFeedback
+          onPress={() => this.props.navigation.navigate('createTask') }
+          background={TouchableNativeFeedback.SelectableBackground()}>
+          <View style={styles.addButton}>
+            <Ionicons name="md-add" size={24} color="white" />
+          </View>
+        </TouchableNativeFeedback>
       </View>
     )
   }
@@ -112,5 +121,17 @@ export default connect(mapStateToProps, { getGroupId })(TaskWrapper)
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  addButton: {
+    backgroundColor: "red",
+    position: 'absolute',
+    height: 60,
+    width: 60,
+    right: 20,
+    bottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+    borderRadius: 30,
   }
 })

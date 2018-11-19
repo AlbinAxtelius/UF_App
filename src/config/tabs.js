@@ -44,7 +44,9 @@ export const MainStack = createStackNavigator({
   CreateTask: {
     screen: CreateTask,
   },
-})
+}, {
+    headerMode: "none"
+  })
 
 
 export const MainBottomNav = createBottomTabNavigator({
@@ -53,7 +55,7 @@ export const MainBottomNav = createBottomTabNavigator({
     navigationOptions: {
       drawerLabel: "Tasks",
       tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />
-    }
+    },
   },
   GroupInfo: {
     screen: GroupInfo,

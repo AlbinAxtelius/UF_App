@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Picker,
   TouchableNativeFeedback,
-  AsyncStorage
+  AsyncStorage,
+  StatusBar
 } from 'react-native'
 import fire from '../../config/config'
 
@@ -27,20 +28,6 @@ class Tasks extends Component {
     this.db = fire.firestore();
   }
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerRight: (
-        <View style={{ flexDirection: "row" }}>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-            onPress={() => navigation.navigate('GroupInfo')}>
-            <View style={{ marginRight: 18 }}>
-              <Ionicons name="md-person-add" color="white" size={28} />
-            </View>
-          </TouchableNativeFeedback>
-        </View>)
-    }
-  }
 
   componentDidMount = async () => {
     this.getGroups();
@@ -85,13 +72,16 @@ class Tasks extends Component {
     })
     return (
       <View style={styles.container}>
-        <Picker
-          selectedValue={this.state.groupId}
-          onValueChange={value => this.handleChange(value)}
-          style={styles.picker}
-        >
-          {renderGroups}
-        </Picker>
+        <View style={styles.header}>
+          <Picker
+            selectedValue={this.state.groupId}
+            onValueChange={value => this.handleChange(value)}
+            style={styles.picker}
+          >
+            {renderGroups}
+          </Picker>
+          <Ionicons name="md-arrow-dropdown" color="white" size={18} />
+        </View>
         <MainBottomNav activeGroup={this.state.groupId} />
       </View>
     )
@@ -104,8 +94,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    borderTopColor: "#156352",
+    borderTopWidth: StatusBar.currentHeight
+  },
+  header: {
+    backgroundColor: "#156352",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   picker: {
-    backgroundColor: "#76B397",
+    width: "50%",
+    height: 60,
+    color: "white",
+    backgroundColor: "#156352",
   }
 })
