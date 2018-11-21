@@ -6,13 +6,15 @@ import {
   StyleSheet,
   RefreshControl,
   ActivityIndicator,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
+  Modal
 } from 'react-native'
 import fire from '../../config/config'
 import { connect } from 'react-redux'
 import { getGroupId } from '../../actions/groupActions'
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import CreateTask from './createTask/createTask' 
 import TaskItem from './taskItem'
 
 class TaskWrapper extends Component {
@@ -23,7 +25,8 @@ class TaskWrapper extends Component {
       groupId: "",
       tasks: [],
       refreshing: false,
-      loading: true
+      loading: true,
+      cTask: false
     }
 
     this.db = fire.firestore();
@@ -101,12 +104,13 @@ class TaskWrapper extends Component {
             {renderTasks}
           </ScrollView>}
         <TouchableNativeFeedback
-          onPress={() => this.props.navigation.navigate('createTask') }
+          onPress={() => this.setState({cTask: true}) }
           background={TouchableNativeFeedback.SelectableBackground()}>
           <View style={styles.addButton}>
             <Ionicons name="md-add" size={24} color="white" />
           </View>
         </TouchableNativeFeedback>
+        {this.state.cTask && <CreateTask groupId={this.state.groupId} visible={this.state.cTask} handleClose={() => this.setState({cTask: false})} />}
       </View>
     )
   }
