@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, AsyncStorage, ScrollView, StyleSheet,ActivityIndicator } from 'react-native';
 import fire from '../../config/config';
 import { connect } from 'react-redux'
 import { getGroupId } from '../../actions/groupActions'
@@ -62,13 +62,20 @@ class ManageGroup extends Component {
 
   render() {
     let renderUsers = this.state.members.map(m => {
-      return <Text key={m.id}>{m.displayName}</Text>
+      return (
+        <View key={m.id} style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+          <View style={{marginRight: 15,height: 38, width: 38, backgroundColor: "red", borderRadius: 38/2, alignItems: "center", justifyContent:'center'}}>
+            <Text style={{color: "white", fontWeight: 'bold', lineHeight:38, height: 38}}>{m.displayName[0]}</Text>
+          </View>
+          <Text style={{fontSize: 24}}>{m.displayName}</Text>
+        </View>
+      )
     })
     return (
       <View style={styles.groupView}>
-        {this.state.loading ? <Text>Loading</Text> :
+        {this.state.loading ? <ActivityIndicator size={38}/> :
           <View style={styles.members}>
-            <Text>Users:</Text>
+            <Text style={{fontSize: 16, color: "#1c1c1c"}}>Användare:</Text>
             {renderUsers}
           </View>
         }
