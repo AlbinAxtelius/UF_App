@@ -1,7 +1,8 @@
-import { GET_GROUP_ID, SET_GROUP_ID } from '../constants';
+import { GET_GROUP_ID, SET_GROUP_ID, ADD_TASK } from '../constants';
 
 const initialState = {
-  groupId: ""
+  groupId: "",
+  task: {}
 }
 
 export default function (state = initialState, action) {
@@ -14,6 +15,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         groupId: action.payload
+      }
+    case ADD_TASK:
+      return {
+        ...state,
+        task: action.payload
       }
     default:
       return state;

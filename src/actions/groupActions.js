@@ -1,4 +1,4 @@
-import { GET_GROUP_ID, SET_GROUP_ID } from '../constants';
+import { GET_GROUP_ID, SET_GROUP_ID, ADD_TASK } from '../constants';
 
 import store from '../../store'
 
@@ -16,5 +16,8 @@ export const setGroupId = groupId => dispatch => {
 }
 
 export const addTask = taskData => dispatch => {
-  
+  dispatch({
+    type: ADD_TASK,
+    payload: taskData
+  })
 }

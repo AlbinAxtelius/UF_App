@@ -12,7 +12,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import fire from '../../../config/config';
 
-export default class CreateTask extends Component {
+import { connect } from 'react-redux';
+import { addTask } from '../../../actions/groupActions';
+
+class CreateTask extends Component {
   constructor(props) {
     super(props)
 
@@ -22,7 +25,9 @@ export default class CreateTask extends Component {
       taskName: "",
       repMessage: null,
       repCode: null,
-      visible: false
+      visible: false,
+      errorMsg: "",
+      createDate: ""
     }
   }
 
@@ -33,20 +38,27 @@ export default class CreateTask extends Component {
   }
 
   handleAccept = async () => {
-
-    this.db
-      .collection('Groups')
-      .doc(this.props.groupId)
-      .collection('Tasks')
-      .add({
+    if (this.state.taskName === "") {
+      this.setState({ errorMsg: "Måste ha ett namn" })
+    } else {
+      const task = {
         taskName: this.state.taskName,
         repCode: this.state.repCode,
         repMessage: this.state.repMessage,
-        completed: false
-      })
-      .then(() => {
-        this.props.handleClose();
-      })
+        completed: false,
+        createDate: Date.now()
+      }
+
+      this.db
+        .collection('Groups')
+        .doc(this.props.groupId)
+        .collection('Tasks')
+        .add(task)
+        .then(() => {
+          this.props.addTask(task);
+          this.props.handleClose();
+        })
+    }
   }
 
   handleChange(repCode) {
@@ -74,11 +86,11 @@ export default class CreateTask extends Component {
   render() {
     return (
       <Modal
+        animationType="slide"
         onRequestClose={() => this.props.handleClose()}
         visible={this.props.visible}
       >
         <View style={styles.container}>
-          <Button onPress={() => this.handleAccept()} title="close" />
           <TextInput
             underlineColorAndroid="#27AE60"
             value={this.state.taskName}
@@ -86,6 +98,7 @@ export default class CreateTask extends Component {
             placeholder="Task name"
             style={styles.taskTitle} />
           <View style={{ alignSelf: 'flex-start', marginLeft: "2.5%" }}>
+            <Text>{this.state.errorMsg}</Text>
             <Text style={{ color: "gray" }}>Repetera</Text>
             <Picker
               selectedValue={this.state.repCode}
@@ -98,11 +111,16 @@ export default class CreateTask extends Component {
               <Picker.Item label="Varje månad" value={3} />
             </Picker>
           </View>
+          <Button onPress={() => this.handleAccept()} title="Lägg till" />
         </View >
       </Modal>
     )
   }
 }
+
+export default connect(null, { addTask })(CreateTask)
+
+
 
 const styles = StyleSheet.create({
   container: {

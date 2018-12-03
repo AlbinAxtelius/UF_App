@@ -1,7 +1,9 @@
 const GET_GROUP_ID = "GET_GROUP_ID";
 const SET_GROUP_ID = "SET_GROUP_ID";
+const ADD_TASK = "ADD_TASK";
 
 export  {
   GET_GROUP_ID,
-  SET_GROUP_ID
+  SET_GROUP_ID,
+  ADD_TASK
 }
