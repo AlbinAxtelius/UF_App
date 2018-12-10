@@ -27,7 +27,6 @@ class TaskWrapper extends Component {
       refreshing: false,
       loading: true,
       cTask: false,
-      prototype: false
     }
 
     this.db = fire.firestore();
@@ -40,9 +39,7 @@ class TaskWrapper extends Component {
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.newTask) {
       let tasks = this.state.tasks;
-
       tasks.unshift(nextProps.newTask);
-
       this.setState({ tasks });
     }
 
@@ -98,21 +95,6 @@ class TaskWrapper extends Component {
       }
     }
     this.setState({ tasks });
-  }
-
-  prototype = async () => {
-    this.setState({ prototype: true })
-
-    let i = 10;
-
-    const timer = setInterval(() => {
-      i--;
-      if (i == 0) {
-        this.setState({ prototype: false })
-        clearInterval(timer);
-      }
-    }, 1000);
-
   }
 
   render() {

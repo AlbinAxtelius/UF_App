@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#156352",
     flexDirection: 'row',
     alignItems: 'center',
+    elevation: 20
   },
   picker: {
     width: "50%",
