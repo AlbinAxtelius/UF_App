@@ -97,21 +97,6 @@ class TaskWrapper extends Component {
     this.setState({ tasks });
   }
 
-  prototype = async () => {
-    this.setState({ prototype: true })
-
-    let i = 10;
-
-    const timer = setInterval(() => {
-      i--;
-      if (i == 0) {
-        this.setState({ prototype: false })
-        clearInterval(timer);
-      }
-    }, 1000);
-
-  }
-
   render() {
     let renderTasks = this.state.tasks.map(m => {
       return <TaskItem handleSwipe={() => this.finishTask(m.id)} key={m.id} title={m.taskName} />
