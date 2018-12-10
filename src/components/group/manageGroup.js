@@ -4,6 +4,7 @@ import fire from '../../config/config';
 import { connect } from 'react-redux'
 import { getGroupId } from '../../actions/groupActions'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AddMember from './addMember';
 
 class ManageGroup extends Component {
   constructor(props) {
@@ -13,7 +14,9 @@ class ManageGroup extends Component {
       groupInfo: {},
       members: [],
       groupId: "",
-      loading: true
+      loading: true,
+      addingMember: false,
+
     };
 
     this.db = fire.firestore();
@@ -80,12 +83,13 @@ class ManageGroup extends Component {
           </View>
         }
         <TouchableNativeFeedback
-          onPress={() => this.setState({ cTask: true })}
+          onPress={() => this.setState({ addingMember: true })}
           background={TouchableNativeFeedback.SelectableBackground()}>
           <View style={styles.addButton}>
             <Ionicons name="md-person-add" size={24} color="white" />
           </View>
         </TouchableNativeFeedback>
+        {this.state.addingMember && <AddMember groupId={this.state.groupId} visible={this.state.addingMember} handleClose={() => this.setState({ addingMember: false })} />}
       </View>
     );
   }

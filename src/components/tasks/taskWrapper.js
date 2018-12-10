@@ -27,7 +27,6 @@ class TaskWrapper extends Component {
       refreshing: false,
       loading: true,
       cTask: false,
-      prototype: false
     }
 
     this.db = fire.firestore();
@@ -40,9 +39,7 @@ class TaskWrapper extends Component {
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.newTask) {
       let tasks = this.state.tasks;
-
       tasks.unshift(nextProps.newTask);
-
       this.setState({ tasks });
     }
 
@@ -100,21 +97,6 @@ class TaskWrapper extends Component {
     this.setState({ tasks });
   }
 
-  prototype = async () => {
-    this.setState({ prototype: true })
-
-    let i = 10;
-
-    const timer = setInterval(() => {
-      i--;
-      if (i == 0) {
-        this.setState({ prototype: false })
-        clearInterval(timer);
-      }
-    }, 1000);
-
-  }
-
   render() {
     let renderTasks = this.state.tasks.map(m => {
       return <TaskItem handleSwipe={() => this.finishTask(m.id)} key={m.id} title={m.taskName} />
@@ -128,11 +110,6 @@ class TaskWrapper extends Component {
               refreshing={this.state.refreshing}
               onRefresh={() => this.getTasks(this.state.groupId)} />}>
             {renderTasks}
-            {!this.state.prototype ? <TaskItem handleSwipe={() => this.prototype()} title="Repeterande" repText="10 sekunder" /> :
-              <View>
-                <Text style={{fontSize: 24, textAlign:"center", marginTop: 20, color: "#1c1c1c"}}>Kommande</Text>
-                <TaskItem title="Repeterande" checked={true} repText="10 sekunder"/>
-              </View>}
           </ScrollView>}
         <TouchableNativeFeedback
           onPress={() => this.setState({ cTask: true })}
