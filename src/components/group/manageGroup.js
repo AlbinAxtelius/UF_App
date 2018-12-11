@@ -11,7 +11,7 @@ class ManageGroup extends Component {
     super(props);
 
     this.state = {
-      groupInfo: {},
+      groupName: "",
       members: [],
       groupId: "",
       loading: true,
@@ -23,12 +23,14 @@ class ManageGroup extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getGroupId();
+    this.setState({
+      groupId: this.props.groupId
+    })
     this.getGroupInfo(this.props.groupId)
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (this.state.groupId != nextProps.groupId) {
+    if (this.state.groupId != nextProps.groupId || this.state.groupId === "") {
       this.setState({
         groupId: nextProps.groupId,
       })
@@ -55,6 +57,7 @@ class ManageGroup extends Component {
               })
             })
             this.setState({
+              groupName: data.groupName,
               members: members,
               loading: false
             })
@@ -76,6 +79,7 @@ class ManageGroup extends Component {
     })
     return (
       <View style={styles.groupView}>
+      <Text>{this.state.groupId}</Text>
         {this.state.loading ? <ActivityIndicator size={38} /> :
           <View style={styles.members}>
             <Text style={{ fontSize: 16, color: "#1c1c1c" }}>Användare:</Text>
@@ -89,7 +93,7 @@ class ManageGroup extends Component {
             <Ionicons name="md-person-add" size={24} color="white" />
           </View>
         </TouchableNativeFeedback>
-        {this.state.addingMember && <AddMember groupId={this.state.groupId} visible={this.state.addingMember} handleClose={() => this.setState({ addingMember: false })} />}
+        {this.state.addingMember && <AddMember groupId={this.state.groupId} groupName={this.state.groupName} visible={this.state.addingMember} handleClose={() => this.setState({ addingMember: false })} />}
       </View>
     );
   }
