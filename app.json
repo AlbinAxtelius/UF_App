@@ -4,6 +4,8 @@
   "icon":"./logo.png",
   "description":"App för att förenkla sysslor i hemmet.",
   "sdkVersion": "27.0.0",
+  "orientation": "portrait",
+  "primaryColor": "#156352",
   "android":{
        "package":"com.johncy.sysselsatt",
         "versionCode":1 , 

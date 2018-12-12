@@ -36,6 +36,10 @@ class TaskWrapper extends Component {
     this.props.getGroupId();
   }
 
+  componentWillMount = () => {
+    this.getTasks(this.props.groupId)
+  }
+
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.newTask) {
       let tasks = this.state.tasks;
@@ -110,11 +114,6 @@ class TaskWrapper extends Component {
               refreshing={this.state.refreshing}
               onRefresh={() => this.getTasks(this.state.groupId)} />}>
             {renderTasks}
-            {!this.state.prototype ? <TaskItem handleSwipe={() => this.prototype()} title="Repeterande" repText="10 sekunder" /> :
-              <View>
-                <Text style={{fontSize: 24, textAlign:"center", marginTop: 20, color: "#1c1c1c"}}>Kommande</Text>
-                <TaskItem title="Repeterande" checked={true} repText="10 sekunder"/>
-              </View>}
           </ScrollView>}
         <TouchableNativeFeedback
           onPress={() => this.setState({ cTask: true })}
