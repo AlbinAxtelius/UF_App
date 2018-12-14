@@ -29,7 +29,7 @@ export default class Profile extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={{ paddingLeft: 20, color: "white", fontWeight: "bold", fontSize: 24, flex: 1 }}>Profil</Text>
+          <Text style={{ marginLeft: 20, color: "white", fontWeight: "bold", fontSize: 20, flex: 1 }}>Profil</Text>
         </View>
         <Text>{this.state.userName}</Text>
         <Button title="Logga ut" color="red" onPress={() => fire.auth().signOut()}/>
