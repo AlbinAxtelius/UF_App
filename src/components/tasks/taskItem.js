@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Animated, Button, Image, Easing } from 'react-native'
+import { Text, View, StyleSheet, TouchableNativeFeedback } from 'react-native'
 import Swipeable from 'react-native-swipeable'
 import CustomCheck from './customCheck'
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -10,17 +10,19 @@ export default TaskItem = (props) => {
     <View style={styles.checkView}><Ionicons name="md-checkmark" size={40} color="white" style={styles.checkImage} /></View>
 
   return (
-    <Swipeable
-      onLeftActionRelease={props.handleSwipe}
-      leftContent={leftContent} >
-      <View style={styles.taskContainer}>
-        <CustomCheck checked={props.checked} handlePress={props.handleSwipe} />
-        <View stlye={styles.taskTextView}>
-          <Text style={styles.taskText}>{props.title}</Text>
-          <Text style={styles.repText}>{props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text>
+    <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()}>
+      <Swipeable
+        onLeftActionRelease={props.handleSwipe}
+        leftContent={leftContent} >
+        <View style={styles.taskContainer}>
+          <CustomCheck checked={props.checked} handlePress={props.handleSwipe} />
+          <View stlye={styles.taskTextView}>
+            <Text style={styles.taskText}>{props.title}</Text>
+            <Text style={styles.repText}>{props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text>
+          </View>
         </View>
-      </View>
-    </Swipeable >
+      </Swipeable >
+    </TouchableNativeFeedback>
   )
 }
 
