@@ -11,6 +11,7 @@ import GroupInfo from '../components/group/manageGroup';
 import TaskWrapper from '../components/tasks/taskWrapper';
 import Profile from '../components/profiles/profile';
 import Invites from '../components/invites/invites';
+import CreateGroup from '../components/CreateGroup/createGroup';
 
 export const LoginStack = createStackNavigator({
   Login: {
@@ -78,7 +79,8 @@ export const MainBottomNav = createBottomTabNavigator({
 export const MainDrawer = createDrawerNavigator({
   Tasks: MainStack,
   Profile: Profile,
-  Invite: Invites
+  Invite: Invites,
+  CreateGroup: CreateGroup
 })
 
 export const AuthStack = createStackNavigator({

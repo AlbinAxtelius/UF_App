@@ -6,8 +6,7 @@ export default class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      forname: "",
-      surname: "",
+      displayName: "",
       email: "",
       password: "",
     };
@@ -23,15 +22,14 @@ export default class Register extends Component {
 
     if (accepted) {
       fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .catch(() => {
-          
+        .catch((e) => {
+          console.log(e)
         })
-        .then(() =>
-          fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password))
         .then(() =>
           fire.auth().currentUser.updateProfile({
             displayName: this.state.displayName
-          })
+          }).then(() =>
+            fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password))
         )
     } else {
       console.log("ee")
@@ -78,8 +76,8 @@ export default class Register extends Component {
               ref="name"
               underlineColorAndroid="#2DC874"
               style={styles.loginInput}
-              placeholder="Fullt namn"
-              onChangeText={name => this.setState({ name })}>
+              placeholder="Skärmnamn"
+              onChangeText={displayName => this.setState({ displayName })}>
             </TextInput>
             <Button onPress={this.handleSubmit.bind(this)} style={styles.loginButton} title="Skapa hushåll" color="#2DC874" />
           </View>
