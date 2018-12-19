@@ -49,18 +49,29 @@ class ManageGroup extends Component {
           .get()
           .then(doc => {
             const data = doc.data();
-            let members = []
-            data.Members.forEach(m => {
-              members.push({
-                id: m.userId,
-                displayName: m.displayName
-              })
-            })
             this.setState({
               groupName: data.groupName,
-              members: members,
-              loading: false
             })
+
+            this.db
+              .collection('Groups')
+              .doc(groupId)
+              .collection('Members')
+              .get()
+              .then(doc => {
+                let members = [];
+                doc.forEach(document => {
+                  let data = document.data();
+                  members.push({
+                    displayName: data.displayName,
+                    userId: data.userId
+                  })
+                })
+                this.setState({
+                  members: members,
+                  loading: false
+                })
+              })
           })
       }
     }
@@ -69,7 +80,7 @@ class ManageGroup extends Component {
   render() {
     let renderUsers = this.state.members.map(m => {
       return (
-        <View key={m.id} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+        <View key={m.userId} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
           <View style={{ marginRight: 15, height: 38, width: 38, backgroundColor: "red", borderRadius: 38 / 2, alignItems: "center", justifyContent: 'center' }}>
             <Text style={{ color: "white", fontWeight: 'bold', lineHeight: 38, height: 38 }}>{m.displayName[0]}</Text>
           </View>
@@ -79,7 +90,7 @@ class ManageGroup extends Component {
     })
     return (
       <View style={styles.groupView}>
-      <Text>{this.state.groupId}</Text>
+        <Text>{this.state.groupId}</Text>
         {this.state.loading ? <ActivityIndicator size={38} /> :
           <View style={styles.members}>
             <Text style={{ fontSize: 16, color: "#1c1c1c" }}>Användare:</Text>

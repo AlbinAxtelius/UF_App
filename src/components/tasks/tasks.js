@@ -45,14 +45,14 @@ class Tasks extends Component {
     this.db
       .collection('Users')
       .doc(fire.auth().currentUser.uid)
+      .collection('Groups')
       .get()
       .then(doc => {
-        const data = doc.data();
         let groups = [];
-        data.Groups.forEach(e => {
+        doc.forEach(e => {
           groups.push({
-            groupId: e.groupId,
-            groupName: e.groupName
+            groupId: e.data().groupId,
+            groupName: e.data().groupName
           })
         });
         this.setState({ groups });

@@ -13,25 +13,13 @@ export default class Profile extends Component {
     }
   }
 
-  componentWillMount = () => {
-    this.db
-      .collection('Users')
-      .doc(fire.auth().currentUser.uid)
-      .get()
-      .then(data => {
-        this.setState({
-          userName: data.data().displayName
-        })
-      })
-  }
-
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={{ marginLeft: 20, color: "white", fontWeight: "bold", fontSize: 20, flex: 1 }}>Profil</Text>
         </View>
-        <Text>{this.state.userName}</Text>
+        <Text>{fire.auth().currentUser.displayName}</Text>
         <Button title="Logga ut" color="red" onPress={() => fire.auth().signOut()}/>
       </View>
     )

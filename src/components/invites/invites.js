@@ -25,28 +25,75 @@ export class Invites extends Component {
         let invites = []
         snap.forEach(doc => {
           console.log(doc.data())
-          invites.push(doc.data())
+          invites.push({
+            groupName: doc.data().groupName,
+            groupId: doc.data().groupId,
+            inviteId: doc.id
+          })
         })
         this.setState({ invites })
       })
   }
 
-  acceptInvite = () => {
-
+  acceptInvite = (groupId, inviteId, groupName, index) => {
+    this.db
+      .collection('Groups')
+      .doc(groupId)
+      .collection('Members')
+      .add({
+        displayName: fire.auth().currentUser.displayName,
+        userId: fire.auth().currentUser.uid
+      })
+      .then(() => {
+        this.db
+          .collection('Users')
+          .doc(fire.auth().currentUser.uid)
+          .collection('Groups')
+          .add({
+            groupName: groupName,
+            groupId: groupId
+          })
+      })
+      .then(() => {
+        this.db
+          .collection('Users')
+          .doc(fire.auth().currentUser.uid)
+          .collection('Invites')
+          .doc(inviteId)
+          .delete()
+          .then(() => {
+            console.log("Invite accepted")
+            let invites = this.state.invites;
+            invites.splice(index, 1);
+            this.setState({ invites });
+          })
+      })
   }
 
-  declineInvite = () => {
-
+  declineInvite = (inviteId, index) => {
+    this.db
+      .collection('Users')
+      .doc(fire.auth().currentUser.uid)
+      .collection('Invites')
+      .doc(inviteId)
+      .delete()
+      .then(() => {
+        console.log("Invite declined")
+        let invites = this.state.invites;
+        invites.splice(index, 1);
+        this.setState({ invites });
+      })
   }
 
   render() {
-    let renderInvites = this.state.invites.map((e,i) => (
-      <View key={i} style={styles.inviteView}>
+    let renderInvites = this.state.invites.map((e, i) => (
+      <View key={e.inviteId} style={styles.inviteView}>
         <View style={styles.inviteTextView}>
           <Text style={styles.inviteText}>{e.groupName}</Text>
         </View>
         <View style={styles.inviteButtonView}>
           <TouchableNativeFeedback
+            onPress={() => this.acceptInvite(e.groupId, e.inviteId, e.groupName, i)}
             background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
           >
             <View>
@@ -54,6 +101,7 @@ export class Invites extends Component {
             </View>
           </TouchableNativeFeedback>
           <TouchableNativeFeedback
+            onPress={() => this.declineInvite(e.inviteId, i)}
             background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
           >
             <View>
