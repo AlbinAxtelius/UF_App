@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import {
   Text,
   View,
@@ -8,14 +8,14 @@ import {
   ActivityIndicator,
   TouchableNativeFeedback,
   Modal
-} from 'react-native'
-import fire from '../../config/config'
-import { connect } from 'react-redux'
-import { getGroupId } from '../../actions/groupActions'
-import Ionicons from '@expo/vector-icons/Ionicons';
+} from "react-native";
+import fire from "../../config/config";
+import { connect } from "react-redux";
+import { getGroupId } from "../../actions/groupActions";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-import CreateTask from './createTask/createTask'
-import TaskItem from './taskItem'
+import CreateTask from "./createTask/createTask";
+import TaskItem from "./taskItem";
 
 class TaskWrapper extends Component {
   constructor(props) {
@@ -26,21 +26,21 @@ class TaskWrapper extends Component {
       tasks: [],
       refreshing: false,
       loading: true,
-      cTask: false,
-    }
+      cTask: false
+    };
 
     this.db = fire.firestore();
   }
 
   componentDidMount = () => {
     this.props.getGroupId();
-  }
+  };
 
   componentWillMount = () => {
-    this.getTasks(this.props.groupId)
-  }
+    this.getTasks(this.props.groupId);
+  };
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     if (nextProps.newTask) {
       let tasks = this.state.tasks;
       tasks.unshift(nextProps.newTask);
@@ -50,24 +50,24 @@ class TaskWrapper extends Component {
     if (nextProps.groupId)
       if (this.state.groupId != nextProps.groupId) {
         this.setState({
-          groupId: nextProps.groupId,
-        })
+          groupId: nextProps.groupId
+        });
         this.getTasks(nextProps.groupId);
       } else {
         this.getTasks(this.state.groupId);
       }
-  }
+  };
 
-  getTasks = (groupId) => {
+  getTasks = groupId => {
     if (groupId !== "") {
       if (groupId !== undefined) {
-        this.setState({ loading: true })
+        this.setState({ loading: true });
         this.db
-          .collection('Groups')
+          .collection("Groups")
           .doc(groupId)
-          .collection('Tasks')
-          .orderBy("createDate", 'asc')
-          .where('completed', '==', false)
+          .collection("Tasks")
+          .orderBy("createDate", "asc")
+          .where("completed", "==", false)
           .get()
           .then(col => {
             let tasks = [];
@@ -75,19 +75,20 @@ class TaskWrapper extends Component {
               tasks.push({
                 id: doc.id,
                 taskName: doc.data().taskName
-              })
-            })
-            this.setState({ tasks: tasks, loading: false })
-          }).catch(e => console.log(e))
+              });
+            });
+            this.setState({ tasks: tasks, loading: false });
+          })
+          .catch(e => console.log(e));
       }
     }
-  }
+  };
 
   finishTask = taskId => {
     this.db
-      .collection('Groups')
+      .collection("Groups")
       .doc(this.state.groupId)
-      .collection('Tasks')
+      .collection("Tasks")
       .doc(taskId)
       .update({ completed: true });
 
@@ -99,56 +100,79 @@ class TaskWrapper extends Component {
       }
     }
     this.setState({ tasks });
-  }
+  };
 
   render() {
     let renderTasks = this.state.tasks.map(m => {
-      return <TaskItem handleSwipe={() => this.finishTask(m.id)} key={m.id} title={m.taskName} />
-    })
+      return (
+        <TaskItem
+          handleSwipe={() => this.finishTask(m.id)}
+          key={m.id}
+          title={m.taskName}
+        />
+      );
+    });
     return (
       <View style={styles.container}>
-        {this.state.loading ? <ActivityIndicator size="large" /> :
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
           <ScrollView
-            refreshControl={<RefreshControl
-              style={{ height: 0 }}
-              refreshing={this.state.refreshing}
-              onRefresh={() => this.getTasks(this.state.groupId)} />}>
+            refreshControl={
+              <RefreshControl
+                style={{ height: 0 }}
+                refreshing={this.state.refreshing}
+                onRefresh={() => this.getTasks(this.state.groupId)}
+              />
+            }
+          >
             {renderTasks}
-          </ScrollView>}
+          </ScrollView>
+        )}
         <TouchableNativeFeedback
           onPress={() => this.setState({ cTask: true })}
-          background={TouchableNativeFeedback.SelectableBackground()}>
+          background={TouchableNativeFeedback.SelectableBackground()}
+        >
           <View style={styles.addButton}>
             <Ionicons name="md-add" size={24} color="white" />
           </View>
         </TouchableNativeFeedback>
-        {this.state.cTask && <CreateTask groupId={this.state.groupId} visible={this.state.cTask} handleClose={() => this.setState({ cTask: false })} />}
+        {this.state.cTask && (
+          <CreateTask
+            groupId={this.state.groupId}
+            visible={this.state.cTask}
+            handleClose={() => this.setState({ cTask: false })}
+          />
+        )}
       </View>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
   groupId: state.groups.groupId,
   newTask: state.groups.task
-})
+});
 
-export default connect(mapStateToProps, { getGroupId })(TaskWrapper)
+export default connect(
+  mapStateToProps,
+  { getGroupId }
+)(TaskWrapper);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1
   },
   addButton: {
-    backgroundColor: "#66392F",
-    position: 'absolute',
+    backgroundColor: "#C0392B",
+    position: "absolute",
     height: 60,
     width: 60,
     right: 20,
     bottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 2,
-    borderRadius: 30,
+    borderRadius: 30
   }
-})
+});

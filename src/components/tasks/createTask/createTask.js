@@ -97,7 +97,7 @@ class CreateTask extends Component {
             onChangeText={taskName => this.setState({ taskName })}
             placeholder="Task name"
             style={styles.taskTitle} />
-          <View style={{ alignSelf: 'flex-start', marginLeft: "2.5%" }}>
+          {/* <View style={{ alignSelf: 'flex-start', marginLeft: "2.5%" }}>
             <Text>{this.state.errorMsg}</Text>
             <Text style={{ color: "gray" }}>Repetera</Text>
             <Picker
@@ -110,7 +110,7 @@ class CreateTask extends Component {
               <Picker.Item label="Varje vecka" value={2} />
               <Picker.Item label="Varje månad" value={3} />
             </Picker>
-          </View>
+          </View> */}
           <Button onPress={() => this.handleAccept()} title="Lägg till" />
         </View >
       </Modal>
