@@ -13,10 +13,10 @@ export default class AuthLoading extends Component {
 
   authListener() {
     fire.auth().onAuthStateChanged(user => {
-      if (user) {
-        fetch(`https://us-central1-f-app-273d0.cloudfunctions.net/updateTasks?userId=${user.uid}`).catch(e => console.log(e));
-      }
-      this.props.navigation.replace(user ? 'App' : 'Auth');
+      // if (user) {
+      //   fetch(`https://us-central1-f-app-273d0.cloudfunctions.net/updateTasks?userId=${user.uid}`).catch(e => console.log(e));
+      // }
+      this.props.navigation.navigate(user ? 'App' : 'Auth');
     })
   }
 

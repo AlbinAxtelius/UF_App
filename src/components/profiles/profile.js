@@ -20,7 +20,9 @@ export default class Profile extends Component {
           <Text style={{ marginLeft: 20, color: "white", fontWeight: "bold", fontSize: 20, flex: 1 }}>Profil</Text>
         </View>
         <Text>{fire.auth().currentUser.displayName}</Text>
-        <Button title="Logga ut" color="red" onPress={() => fire.auth().signOut()}/>
+        <Button title="Logga ut" color="red" onPress={() => {
+          fire.auth().signOut();
+        }} />
       </View>
     )
   }

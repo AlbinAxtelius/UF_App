@@ -35,7 +35,7 @@ export const MainStack = createStackNavigator({
   Tasks: {
     screen: Tasks,
     navigationOptions: {
-      title: "Tasks",
+      title: "Sysslor",
       headerStyle: {
         backgroundColor: '#156352',
       },
@@ -57,13 +57,14 @@ export const MainBottomNav = createBottomTabNavigator({
     screen: TaskWrapper,
     navigationOptions: {
       drawerLabel: "Tasks",
-      tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />
+      tabBarIcon: <Ionicons size={26} name="md-checkmark" color="black" />,
+      title: "Sysslor"
     },
   },
   GroupInfo: {
     screen: GroupInfo,
     navigationOptions: {
-      title: "Group",
+      title: "Grupp",
       tabBarIcon: <Ionicons size={26} name="md-settings" color="black" />
     }
   },
@@ -77,10 +78,10 @@ export const MainBottomNav = createBottomTabNavigator({
   });
 
 export const MainDrawer = createDrawerNavigator({
-  Tasks: MainStack,
-  Profile: Profile,
-  Invite: Invites,
-  CreateGroup: CreateGroup
+  Sysslor: MainStack,
+  Profil: Profile,
+  Inbjudningar: Invites,
+  "Skapa grupp": CreateGroup
 })
 
 export const AuthStack = createStackNavigator({
