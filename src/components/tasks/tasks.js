@@ -29,18 +29,6 @@ class Tasks extends Component {
 
   componentDidMount = async () => {
     this.getGroups();
-
-    await AsyncStorage.getItem("groupId", (e, groupId) => {
-      if (groupId) {
-        this.setState({ groupId });
-        this.props.setGroupId(groupId);
-        console.log(`${groupId} was set`);
-      } else {
-        this.handleChange(this.state.groups[0].groupId)
-        console.log(`${this.state.groups[0].groupId} was set`);
-
-      }
-    });
   };
 
   getGroups = async () => {
@@ -58,6 +46,17 @@ class Tasks extends Component {
           });
         });
         this.setState({ groups });
+        AsyncStorage.getItem("groupId", (e, groupId) => {
+          if (groupId) {
+            this.setState({ groupId });
+            this.props.setGroupId(groupId);
+            console.log(`${groupId} was set`);
+          } else {
+            this.setState({ groupId: groups[0].groupId });
+            this.props.setGroupId(groups[0].groupId);
+            console.log(`${groups[0].groupId} was set`);
+          }
+        });
       });
   };
 
