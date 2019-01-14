@@ -10,7 +10,6 @@ export default TaskItem = (props) => {
     <View style={styles.checkView}><Ionicons name="md-checkmark" size={40} color="white" style={styles.checkImage} /></View>
 
   return (
-    <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()}>
       <Swipeable
         onLeftActionRelease={props.handleSwipe}
         leftContent={leftContent} >
@@ -18,11 +17,10 @@ export default TaskItem = (props) => {
           <CustomCheck checked={props.checked} handlePress={props.handleSwipe} />
           <View stlye={styles.taskTextView}>
             <Text style={styles.taskText}>{props.title}</Text>
-            <Text style={styles.repText}>{props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text>
+            {/* <Text style={styles.repText}>{props.repText ? `Repetera: ${props.repText}` : "Repetera inte"}</Text> */}
           </View>
         </View>
       </Swipeable >
-    </TouchableNativeFeedback>
   )
 }
 
@@ -32,12 +30,13 @@ const styles = StyleSheet.create({
     borderBottomColor: "#BDC3C7",
     width: "100%",
     height: 80,
-    padding: 20,
+    paddingLeft: 20,
     alignItems: 'center',
     flexDirection: 'row',
   },
   taskText: {
     marginLeft: 20,
+    lineHeight: 80,
     fontSize: 20,
     flex: 1
   },
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   taskTextView: {
-    flex: 1
+    flex: 1,
   },
   repText: {
     marginLeft: 20,
