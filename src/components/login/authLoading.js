@@ -16,7 +16,7 @@ export default class AuthLoading extends Component {
       if (user) {
         fetch(`https://us-central1-f-app-273d0.cloudfunctions.net/updateTasks?userId=${user.uid}`).catch(e => console.log(e));
       }
-      this.props.navigation.navigate(user ? 'App' : 'Auth', { userData: user });
+      this.props.navigation.replace(user ? 'App' : 'Auth');
     })
   }
 
