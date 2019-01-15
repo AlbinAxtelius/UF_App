@@ -65,7 +65,7 @@ export const MainBottomNav = createBottomTabNavigator({
     screen: GroupInfo,
     navigationOptions: {
       title: "Grupp",
-      tabBarIcon: <Ionicons size={26} name="md-settings" color="black" />
+      tabBarIcon: <Ionicons size={26} name="md-contacts" color="black" />
     }
   },
 }, {
