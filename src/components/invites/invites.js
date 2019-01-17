@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, TouchableNativeFeedback, StatusBar } from 'react-native'
 import fire from '../../config/config'
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from '@expo/vector-icons/Ionicons'
+import globalstyles from '../../styles/globalstyle';
 
 
 export class Invites extends Component {
@@ -111,10 +112,11 @@ export class Invites extends Component {
         </View>
       </View>
     ))
+
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Inbjudningar</Text>
+      <View style={globalstyles.container}>
+        <View style={globalstyles.header}>
+          <Text style={globalstyles.headerText}>Inbjudningar</Text>
         </View>
         {renderInvites}
       </View>
@@ -125,26 +127,6 @@ export class Invites extends Component {
 export default Invites
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    borderTopColor: "#156352",
-    borderTopWidth: StatusBar.currentHeight
-  },
-  header: {
-    backgroundColor: "#156352",
-    flexDirection: 'row',
-    alignItems: 'center',
-    elevation: 20,
-    height: 60
-  },
-  headerText: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: 'white',
-    marginLeft: 20,
-    flex: 1
-  },
   inviteView: {
     borderBottomWidth: .8,
     borderBottomColor: "#BDC3C7",

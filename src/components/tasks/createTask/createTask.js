@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import fire from '../../../config/config';
+import globalstyles from '../../../styles/globalstyle'
 
 import { connect } from 'react-redux';
 import { addTask } from '../../../actions/groupActions';
@@ -90,13 +91,13 @@ class CreateTask extends Component {
         onRequestClose={() => this.props.handleClose()}
         visible={this.props.visible}
       >
-        <View style={styles.container}>
+        <View style={globalstyles.popupContainer}>
           <TextInput
             underlineColorAndroid="#27AE60"
             value={this.state.taskName}
             onChangeText={taskName => this.setState({ taskName })}
-            placeholder="Task name"
-            style={styles.taskTitle} />
+            placeholder="Syssla"
+            style={globalstyles.inputBig} />
           {/* <View style={{ alignSelf: 'flex-start', marginLeft: "2.5%" }}>
             <Text>{this.state.errorMsg}</Text>
             <Text style={{ color: "gray" }}>Repetera</Text>
@@ -119,19 +120,3 @@ class CreateTask extends Component {
 }
 
 export default connect(null, { addTask })(CreateTask)
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: 'center',
-  },
-  taskTitle: {
-    width: "95%",
-    marginTop: 16,
-    fontSize: 40,
-    padding: 5,
-  }
-})

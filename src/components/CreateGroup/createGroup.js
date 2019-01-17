@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, Button, AsyncStorage, StyleSheet, StatusBar } from 'react-native'
 import fire from '../../config/config';
+import globalstyles from '../../styles/globalstyle'
 
 export class CreateGroup extends Component {
   constructor(props) {
@@ -46,14 +47,15 @@ export class CreateGroup extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={{ marginLeft: 20, color: "white", fontWeight: "bold", fontSize: 20, flex: 1 }}>Skapa ny grupp</Text>
+      <View style={globalstyles.container}>
+        <View style={globalstyles.header}>
+          <Text style={globalstyles.headerText}>Skapa ny grupp</Text>
         </View>
         <TextInput
           placeholder="Gruppnamn"
           value={this.state.groupName}
-          onChangeText={groupName => this.setState({ groupName })} />
+          onChangeText={groupName => this.setState({ groupName })}
+          style={globalstyles.inputBig} />
         <Button
           title="Skapa grupp"
           onPress={() => this.handleCreate()} />
@@ -61,40 +63,5 @@ export class CreateGroup extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    borderTopColor: "#156352",
-    borderTopWidth: StatusBar.currentHeight,
-  },
-  addTaskView: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    right: 20,
-    bottom: 20,
-    padding: 20,
-    backgroundColor: "#E74C3C",
-    borderRadius: 30,
-    elevation: 4,
-  },
-  addTaskText: {
-    color: "white",
-    lineHeight: 40,
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-  header: {
-    backgroundColor: "#156352",
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 60,
-    elevation: 20
-  },
-})
 
 export default CreateGroup

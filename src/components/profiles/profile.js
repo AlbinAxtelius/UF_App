@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, FlatList, StyleSheet, TouchableHighlight, Button, Text, StatusBar } from 'react-native'
 import fire from '../../config/config'
+import globalstyles from '../../styles/globalstyle'
 
 export default class Profile extends Component {
   constructor() {
@@ -15,9 +16,9 @@ export default class Profile extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={{ marginLeft: 20, color: "white", fontWeight: "bold", fontSize: 20, flex: 1 }}>Profil</Text>
+      <View style={globalstyles.container}>
+        <View style={globalstyles.header}>
+          <Text style={globalstyles.headerText}>Profil</Text>
         </View>
         <Text style={{fontSize: 16, margin: 20}}>{fire.auth().currentUser.displayName}</Text>
         <Button title="Logga ut" color="red" onPress={() => {
@@ -29,36 +30,10 @@ export default class Profile extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    borderTopColor: "#156352",
-    borderTopWidth: StatusBar.currentHeight,
-  },
-  addTaskView: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    right: 20,
-    bottom: 20,
-    padding: 20,
-    backgroundColor: "#E74C3C",
-    borderRadius: 30,
-    elevation: 4,
-  },
-  addTaskText: {
-    color: "white",
-    lineHeight: 40,
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-  header: {
-    backgroundColor: "#156352",
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 60,
-    elevation: 20
-  },
+
+  displayname: {
+    fontSize: 16,
+    margin: 20
+  }
+
 })
