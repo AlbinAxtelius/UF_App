@@ -5,9 +5,13 @@ import {
   Button,
   Modal,
   TextInput,
-  StyleSheet
+  StyleSheet,
+  TouchableNativeFeedback
 } from 'react-native'
+
+import { Ionicons } from '@expo/vector-icons';
 import fire from '../../config/config';
+import globalstyles from '../../styles/globalstyle'
 
 export class AddMember extends Component {
   constructor(props) {
@@ -41,13 +45,23 @@ export class AddMember extends Component {
         onRequestClose={() => this.props.handleClose()}
         visible={this.props.visible}
       >
-        <View style={styles.container}>
+        <View style={globalstyles.popupContainer}>
+          <View style={globalstyles.popupHeader}>
+              <TouchableNativeFeedback
+              onPress={() => this.props.handleClose()}
+              background={TouchableNativeFeedback.SelectableBackground()}>
+                <View style={globalstyles.popupBack}>
+                  <Ionicons name="md-arrow-back" size={24} />
+                </View>
+              </TouchableNativeFeedback>
+              <Text style={globalstyles.greenHeaderText}>Lägg till medlem</Text>
+            </View>
           <TextInput
             underlineColorAndroid="#27AE60"
             value={this.state.email}
             onChangeText={email => this.setState({ email })}
             placeholder="Email"
-            style={styles.taskTitle} />
+            style={globalstyles.inputBig} />
           <View style={{ alignSelf: 'flex-start', marginLeft: "2.5%" }}>
             <Text>{this.state.message}</Text>
           </View>
@@ -59,17 +73,3 @@ export class AddMember extends Component {
 }
 
 export default AddMember
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: 'center',
-  },
-  taskTitle: {
-    width: "95%",
-    marginTop: 16,
-    fontSize: 40,
-    padding: 5,
-  }
-})

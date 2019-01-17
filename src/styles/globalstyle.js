@@ -24,6 +24,14 @@ export default globalstyles = StyleSheet.create({
     flex: 1
   },
 
+  greenHeaderText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#156352",
+    marginLeft: 20,
+    flex: 1
+  },
+
   inputBig: {
     width: "95%",
     marginTop: 16,
@@ -34,6 +42,18 @@ export default globalstyles = StyleSheet.create({
   popupContainer: {
     flex: 1,
     backgroundColor: "white",
-    alignItems: 'center',
+    alignItems: "center",
+    flexDirection: "column"
+  },
+
+  popupHeader: {
+    flexDirection: "row",
+    height: 60,
+    width: "100%",
+    alignItems: "center"
+  },
+
+  popupBack: {
+    padding: 20
   }
 });

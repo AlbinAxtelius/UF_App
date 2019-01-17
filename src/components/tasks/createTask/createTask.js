@@ -92,6 +92,16 @@ class CreateTask extends Component {
         visible={this.props.visible}
       >
         <View style={globalstyles.popupContainer}>
+          <View style={globalstyles.popupHeader}>
+            <TouchableNativeFeedback
+             onPress={() => this.props.handleClose()}
+             background={TouchableNativeFeedback.SelectableBackground()}>
+              <View style={globalstyles.popupBack}>
+                <Ionicons name="md-arrow-back" size={24} />
+              </View>
+            </TouchableNativeFeedback>
+            <Text style={globalstyles.greenHeaderText}>Lägg till syssla</Text>
+          </View>
           <TextInput
             underlineColorAndroid="#27AE60"
             value={this.state.taskName}
