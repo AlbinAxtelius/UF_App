@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Navigation } from 'react'
 import { Text, View, StyleSheet, TouchableNativeFeedback, StatusBar } from 'react-native'
 import fire from '../../config/config'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -116,6 +116,11 @@ export class Invites extends Component {
     return (
       <View style={globalstyles.container}>
         <View style={globalstyles.header}>
+          <TouchableNativeFeedback
+            onPress={() => this.props.navigation.openDrawer()}
+          >
+            <Ionicons name="md-menu" size={26} style={globalstyles.openMenu} />
+          </TouchableNativeFeedback>
           <Text style={globalstyles.headerText}>Inbjudningar</Text>
         </View>
         {renderInvites}

@@ -79,6 +79,12 @@ class Tasks extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
+          <TouchableNativeFeedback
+            onPress={() => this.props.navigation.openDrawer()}
+          >
+            <Ionicons name="md-menu" size={26} style={globalstyles.openMenu} />
+          </TouchableNativeFeedback>
+          
           <Picker
             selectedValue={this.state.groupId}
             onValueChange={value => this.handleChange(value)}

@@ -55,5 +55,11 @@ export default globalstyles = StyleSheet.create({
 
   popupBack: {
     padding: 20
+  },
+
+  openMenu: {
+    color: "white",
+    padding: 20
   }
+
 });

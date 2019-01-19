@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, FlatList, StyleSheet, TouchableHighlight, Button, Text, StatusBar } from 'react-native'
+import { View, StyleSheet, Button, Text, TouchableNativeFeedback } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
 import fire from '../../config/config'
 import globalstyles from '../../styles/globalstyle'
 
@@ -18,6 +19,11 @@ export default class Profile extends Component {
     return (
       <View style={globalstyles.container}>
         <View style={globalstyles.header}>
+          <TouchableNativeFeedback
+            onPress={() => this.props.navigation.openDrawer()}
+          >
+            <Ionicons name="md-menu" size={26} style={globalstyles.openMenu} />
+          </TouchableNativeFeedback>
           <Text style={globalstyles.headerText}>Profil</Text>
         </View>
         <Text style={{fontSize: 16, margin: 20}}>{fire.auth().currentUser.displayName}</Text>
