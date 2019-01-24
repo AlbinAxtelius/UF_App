@@ -92,7 +92,7 @@ class Tasks extends Component {
           >
             {renderGroups}
           </Picker>
-          <Ionicons name="md-arrow-dropdown" color="white" size={18} />
+          <Ionicons name="md-arrow-dropdown" color="white" size={24} />
         </View>
         <MainBottomNav activeGroup={this.state.groupId} />
       </View>

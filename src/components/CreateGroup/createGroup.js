@@ -1,50 +1,56 @@
-import React, { Component } from 'react'
-import { Text, View, TextInput, Button, AsyncStorage, TouchableNativeFeedback } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
-import fire from '../../config/config';
-import globalstyles from '../../styles/globalstyle'
+import React, { Component } from "react";
+import {
+  Text,
+  View,
+  TextInput,
+  AsyncStorage,
+  TouchableNativeFeedback
+} from "react-native";
+import { Button } from "react-native-material-ui";
+import { Ionicons } from "@expo/vector-icons";
+import fire from "../../config/config";
+import globalstyles from "../../styles/globalstyle";
 
 export class CreateGroup extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.db = fire.firestore();
 
     this.state = {
       groupName: ""
-    }
+    };
   }
 
   handleCreate = () => {
     if (this.state.groupName !== "")
       this.db
-        .collection('Groups')
+        .collection("Groups")
         .add({
           groupName: this.state.groupName
         })
         .then(doc => {
           this.db
-            .collection('Groups')
+            .collection("Groups")
             .doc(doc.id)
-            .collection('Members')
+            .collection("Members")
             .add({
               displayName: fire.auth().currentUser.displayName,
               userId: fire.auth().currentUser.uid
-            })
+            });
           this.db
-            .collection('Users')
+            .collection("Users")
             .doc(fire.auth().currentUser.uid)
-            .collection('Groups')
+            .collection("Groups")
             .add({
               groupName: this.state.groupName,
               groupId: doc.id
-            })
-          AsyncStorage.setItem('groupId', doc.id)
-            .then(() => {
-              this.props.navigation.navigate('Tasks')
-            })
-        })
-  }
+            });
+          AsyncStorage.setItem("groupId", doc.id).then(() => {
+            this.props.navigation.navigate("Tasks");
+          });
+        });
+  };
 
   render() {
     return (
@@ -57,17 +63,26 @@ export class CreateGroup extends Component {
           </TouchableNativeFeedback>
           <Text style={globalstyles.headerText}>Skapa ny grupp</Text>
         </View>
-        <TextInput
-          placeholder="Gruppnamn"
-          value={this.state.groupName}
-          onChangeText={groupName => this.setState({ groupName })}
-          style={globalstyles.inputBig} />
-        <Button
-          title="Skapa grupp"
-          onPress={() => this.handleCreate()} />
+        <View style={{width: "90%", alignItems:'center'}}>
+          <TextInput
+            placeholder="Gruppnamn"
+            value={this.state.groupName}
+            onChangeText={groupName => this.setState({ groupName })}
+            style={globalstyles.inputBig}
+          />
+          <View style={{width: "50%"}}>
+          <Button
+            text="Skapa grupp"
+            accent
+            raised
+            disabled={this.state.groupName.length === 0}
+            onPress={() => this.handleCreate()}
+          />
+          </View>
+        </View>
       </View>
-    )
+    );
   }
 }
 
-export default CreateGroup
+export default CreateGroup;

@@ -5,7 +5,8 @@ export default globalstyles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     borderTopColor: "#156352",
-    borderTopWidth: StatusBar.currentHeight
+    borderTopWidth: StatusBar.currentHeight,
+    alignItems: 'center',
   },
 
   header: {
