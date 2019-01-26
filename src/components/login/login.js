@@ -68,7 +68,6 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Dimensions.get("window").height * .16,
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',

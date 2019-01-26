@@ -1,8 +1,15 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Button, Text, TouchableNativeFeedback } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
-import fire from '../../config/config'
-import globalstyles from '../../styles/globalstyle'
+import React, { Component } from "react";
+import {
+  View,
+  StyleSheet,
+  Button,
+  Text,
+  TouchableNativeFeedback
+} from "react-native";
+import { Avatar } from "react-native-material-ui";
+import { Ionicons } from "@expo/vector-icons";
+import fire from "../../config/config";
+import globalstyles from "../../styles/globalstyle";
 
 export default class Profile extends Component {
   constructor() {
@@ -11,9 +18,15 @@ export default class Profile extends Component {
     this.db = fire.firestore();
 
     this.state = {
-      userName: ""
-    }
+      username: ""
+    };
   }
+
+  componentWillMount = () => {
+    this.setState({
+      username: fire.auth().currentUser.displayName
+    });
+  };
 
   render() {
     return (
@@ -26,20 +39,38 @@ export default class Profile extends Component {
           </TouchableNativeFeedback>
           <Text style={globalstyles.headerText}>Profil</Text>
         </View>
-        <Text style={{fontSize: 16, margin: 20}}>{fire.auth().currentUser.displayName}</Text>
-        <Button title="Logga ut" color="red" onPress={() => {
-          fire.auth().signOut();
-        }} />
+        <View>
+          <View style={{ height: 100, margin: 24 }}>
+            <Avatar
+              text={this.state.username.substring(0, 1)}
+              size={100}
+              style={{
+                content: { fontSize: 40 },
+                container: { backgroundColor: "#C0392B" }
+              }}
+            />
+          </View>
+          <Text style={{ fontSize: 32, textAlign: "center" }}>
+            {this.state.username}
+          </Text>
+        </View>
+        <View style={{ marginTop: "auto", marginBottom: 48 }}>
+          <Button
+            title="Logga ut"
+            color="#C0392B"
+            onPress={() => {
+              fire.auth().signOut();
+            }}
+          />
+        </View>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
-
   displayname: {
     fontSize: 16,
     margin: 20
   }
-
-})
+});
