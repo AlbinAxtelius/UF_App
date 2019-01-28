@@ -56,10 +56,10 @@ export default class App extends React.Component {
           onChangeText={password => this.setState({ password })}
           value={this.state.password}>
         </TextInput>
-        {!this.state.signingIn && <Button onPress={this.handleLogin.bind(this)} title="Login " style={styles.loginButton} color="#2DC874" />}
+        {!this.state.signingIn && <Button onPress={this.handleLogin.bind(this)} title="Logga in" style={styles.loginButton} color="#2DC874" />}
         <Text style={{ color: "#E74C3C" }}>{this.state.loginError}</Text>
         <TouchableHighlight style={{ marginTop: "auto", marginBottom: 48 }} onPress={() => this.props.navigation.navigate('Register')}>
-          <Text style={styles.registerText}>Resgistrera</Text>
+          <Text style={styles.registerText}>Registrera</Text>
         </TouchableHighlight>
       </View>
     );
