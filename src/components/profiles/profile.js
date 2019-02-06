@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Button,
   Text,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
+  AsyncStorage
 } from "react-native";
 import { Avatar } from "react-native-material-ui";
 import { Ionicons } from "@expo/vector-icons";
@@ -59,7 +60,9 @@ export default class Profile extends Component {
             title="Logga ut"
             color="#C0392B"
             onPress={() => {
-              fire.auth().signOut();
+              AsyncStorage.removeItem("groupId").then(() =>
+                fire.auth().signOut()
+              );
             }}
           />
         </View>

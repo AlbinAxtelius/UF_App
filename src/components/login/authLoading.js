@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, ActivityIndicator, StyleSheet } from 'react-native'
+import { Text, View, ActivityIndicator, StyleSheet , Image} from 'react-native'
 import fire from '../../../src/config/config';
 
 export default class AuthLoading extends Component {
@@ -13,9 +13,6 @@ export default class AuthLoading extends Component {
 
   authListener() {
     fire.auth().onAuthStateChanged(user => {
-      // if (user) {
-      //   fetch(`https://us-central1-f-app-273d0.cloudfunctions.net/updateTasks?userId=${user.uid}`).catch(e => console.log(e));
-      // }
       this.props.navigation.navigate(user ? 'App' : 'Auth');
     })
   }
@@ -23,7 +20,7 @@ export default class AuthLoading extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#2980B9" />
+        <ActivityIndicator size="large" color="#156352" />
         <Text style={styles.loadingText}>Starting</Text>
       </View>
     )

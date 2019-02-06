@@ -6,7 +6,7 @@ import {
   TextInput,
   Button,
   TouchableHighlight,
-  Dimensions
+  AsyncStorage
 } from "react-native";
 import fire from "../../config/config";
 
@@ -29,7 +29,6 @@ export default class App extends React.Component {
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .catch(loginError => {
         let errorMessage = "";
-        console.log(loginError.code);
         switch (loginError.code) {
           case "auth/invalid-email":
             errorMessage = "Ogiltig email";

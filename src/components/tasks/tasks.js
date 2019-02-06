@@ -5,7 +5,9 @@ import {
   Picker,
   TouchableNativeFeedback,
   AsyncStorage,
-  StatusBar
+  StatusBar,
+  Text,
+  Button
 } from "react-native";
 import fire from "../../config/config";
 
@@ -22,7 +24,7 @@ class Tasks extends Component {
     this.state = {
       groupId: "",
       groups: [],
-      refresh: true
+      loading: true
     };
     this.db = fire.firestore();
   }
@@ -48,13 +50,17 @@ class Tasks extends Component {
         this.setState({ groups });
         AsyncStorage.getItem("groupId", (e, groupId) => {
           if (groupId) {
-            this.setState({ groupId });
+            this.setState({ groupId: groupId, loading: false });
             this.props.setGroupId(groupId);
             console.log(`${groupId} was set`);
           } else {
-            this.setState({ groupId: groups[0].groupId });
-            this.props.setGroupId(groups[0].groupId);
-            console.log(`${groups[0].groupId} was set`);
+            if (groups.length > 0) {
+              this.setState({ groupId: groups[0].groupId, loading: false });
+              this.props.setGroupId(groups[0].groupId);
+              console.log(`${groups[0].groupId} was set`);
+            } else {
+              this.setState({ loading: false });
+            }
           }
         });
       });
@@ -84,7 +90,7 @@ class Tasks extends Component {
           >
             <Ionicons name="md-menu" size={26} style={globalstyles.openMenu} />
           </TouchableNativeFeedback>
-          
+
           <Picker
             selectedValue={this.state.groupId}
             onValueChange={value => this.handleChange(value)}
@@ -94,7 +100,25 @@ class Tasks extends Component {
           </Picker>
           <Ionicons name="md-arrow-dropdown" color="white" size={24} />
         </View>
-        <MainBottomNav activeGroup={this.state.groupId} />
+        {this.state.groups.length === 0 && !this.state.loading ? (
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={{ width: "80%", marginVertical: 20 }}>
+              <Text
+                style={{ fontSize: 24, color: "#7F8C8D", textAlign: "center" }}
+              >
+                Du är inte med i en grupp, bli inbjuden eller skapa en ny grupp
+                nedan.
+              </Text>
+            </View>
+            <Button
+              color={"#C0392B"}
+              title="Skapa grupp"
+              onPress={() => this.props.navigation.navigate("Skapa grupp")}
+            />
+          </View>
+        ) : (
+          <MainBottomNav activeGroup={this.state.groupId} />
+        )}
       </View>
     );
   }
