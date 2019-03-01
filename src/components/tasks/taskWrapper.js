@@ -74,7 +74,9 @@ class TaskWrapper extends Component {
             col.docs.forEach(doc => {
               tasks.push({
                 id: doc.id,
-                taskName: doc.data().taskName
+                taskName: doc.data().taskName,
+                repCode: doc.data().repCode,
+                repText: doc.data().repMessage
               });
             });
             this.setState({ tasks: tasks, loading: false });
@@ -84,13 +86,39 @@ class TaskWrapper extends Component {
     }
   };
 
-  finishTask = taskId => {
+  finishTask = (taskId, repCode) => {
+    console.log(repCode)
     this.db
       .collection("Groups")
       .doc(this.state.groupId)
       .collection("Tasks")
       .doc(taskId)
       .update({ completed: true });
+
+    if (repCode >= 0) {
+      console.log(repCode)
+      let now = new Date().getTime(),
+        time;
+      const dayInMillisecs = 86400;
+
+      switch (repCode) {
+        case 0:
+          time = now + dayInMillisecs;
+          break;
+        case 1:
+          time = now + dayInMillisecs * 7;
+          break;
+        case 2:
+          time = now + dayInMillisecs * 28;
+          break;
+      }
+
+      this.db.collection("Repeating").add({
+        dueDate: time,
+        groupId: this.state.groupId,
+        taskId: taskId
+      });
+    }
 
     let tasks = this.state.tasks;
 
@@ -106,9 +134,10 @@ class TaskWrapper extends Component {
     let renderTasks = this.state.tasks.map(m => {
       return (
         <TaskItem
-          handleSwipe={() => this.finishTask(m.id)}
+          handleSwipe={() => this.finishTask(m.id, m.repCode)}
           key={m.id}
           title={m.taskName}
+          repText={m.repText}
         />
       );
     });
