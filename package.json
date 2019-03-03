@@ -35,6 +35,7 @@
     "react-redux": "^5.1.1",
     "react-router-native": "^4.3.0",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "reinput": "^2.5.3"
   }
 }

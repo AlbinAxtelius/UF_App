@@ -17,6 +17,7 @@ import TaskWrapper from "../components/tasks/taskWrapper";
 import Profile from "../components/profiles/profile";
 import Invites from "../components/invites/invites";
 import CreateGroup from "../components/CreateGroup/createGroup";
+import ForgotPassword from "../components/login/forgotPassword";
 
 export const LoginStack = createStackNavigator({
   Login: {
@@ -31,6 +32,9 @@ export const LoginStack = createStackNavigator({
     navigationOptions: {
       title: "Register"
     }
+  },
+  passwordReset: {
+    screen: ForgotPassword
   }
 });
 

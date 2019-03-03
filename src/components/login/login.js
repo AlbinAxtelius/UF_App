@@ -3,12 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   Button,
-  TouchableHighlight,
-  AsyncStorage
+  TouchableHighlight
+  ,TextInput
 } from "react-native";
 import fire from "../../config/config";
+import { TextField } from "react-native-material-textfield";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -49,22 +49,29 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.titleText}>Sysselsatt</Text>
-        <TextInput
-          underlineColorAndroid="#2DC874"
-          placeholder="Email"
-          style={styles.loginInput}
-          onChangeText={email => this.setState({ email })}
-          value={this.state.email}
-          keyboardType="email-address"
-        />
-        <TextInput
-          underlineColorAndroid="#2DC874"
-          placeholder="Lösenord"
-          style={styles.loginInput}
-          secureTextEntry={true}
-          onChangeText={password => this.setState({ password })}
-          value={this.state.password}
-        />
+        <View style={{ width: "80%" }}>
+          <TextField
+            label="E-postadress"
+            value={this.state.email}secureTextEntry={true}
+            tintColor="#156352"
+            keyboardType="email-address"
+            onChangeText={email => this.setState({ email })}
+          />
+          <TextField
+            label="Lösenord"
+            value={this.state.password}
+            secureTextEntry={true}
+            tintColor="#156352"
+            keyboardType="visible-password"
+            onChangeText={password => this.setState({ password })}
+          />
+          <TextInput secureTextEntry={true} />
+        </View>
+        <TouchableHighlight
+          onPress={() => this.props.navigation.navigate("passwordReset")}
+        >
+          <Text style={styles.registerText}>Glömt lösenord</Text>
+        </TouchableHighlight>
         {!this.state.signingIn && (
           <Button
             onPress={this.handleLogin.bind(this)}
