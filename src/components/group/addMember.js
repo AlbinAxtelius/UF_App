@@ -9,6 +9,7 @@ import {
   TouchableNativeFeedback,
   ActivityIndicator
 } from "react-native";
+import { TextField } from "react-native-material-textfield";
 
 import { Ionicons } from "@expo/vector-icons";
 import fire from "../../config/config";
@@ -34,7 +35,7 @@ export class AddMember extends Component {
     )
       .then(res => res.json())
       .then(result => {
-        this.setState({loading: false})
+        this.setState({ loading: false });
         if (result.message.message)
           this.setState({ message: result.message.message });
         else this.setState({ message: result.message });
@@ -60,13 +61,15 @@ export class AddMember extends Component {
             </TouchableNativeFeedback>
             <Text style={globalstyles.greenHeaderText}>Lägg till medlem</Text>
           </View>
-          <TextInput
-            underlineColorAndroid="#27AE60"
-            value={this.state.email}
-            onChangeText={email => this.setState({ email })}
-            placeholder="Email"
-            style={globalstyles.inputBig}
-          />
+          <View style={{ width: "80%" }}>
+            <TextField
+              label="E-postadress"
+              value={this.state.email}
+              onChangeText={email => this.setState({ email })}
+              tintColor="#156352"
+              
+            />
+          </View>
           <View style={{ alignSelf: "flex-start", marginLeft: "2.5%" }}>
             <Text>{this.state.message}</Text>
           </View>

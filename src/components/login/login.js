@@ -4,11 +4,13 @@ import {
   Text,
   View,
   Button,
-  TouchableHighlight
-  ,TextInput
+  TouchableHighlight,
+  Image,
 } from "react-native";
 import fire from "../../config/config";
 import { TextField } from "react-native-material-textfield";
+
+import logo from "../../../logo.png";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -17,7 +19,6 @@ export default class App extends React.Component {
     this.state = {
       email: "",
       password: "",
-      loginError: "",
       signingIn: false
     };
   }
@@ -28,64 +29,75 @@ export default class App extends React.Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .catch(loginError => {
-        let errorMessage = "";
+        let errorMessage;
         switch (loginError.code) {
           case "auth/invalid-email":
-            errorMessage = "Ogiltig email";
+            errorMessage = { emailError: "Ogiltig email" };
             break;
           case "auth/wrong-password":
-            errorMessage = "Fel lösenord";
+            errorMessage = { passwordError: "Fel lösenord" };
             break;
           default:
-            errorMessage = "Something went wrong";
+            errorMessage = { emailError: "Something went wrong" };
             break;
         }
 
-        this.setState({ loginError: errorMessage, signingIn: false });
+        this.setState({
+          passwordError: "",
+          emailError: "",
+          ...errorMessage,
+          signingIn: false
+        });
       });
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.titleText}>Sysselsatt</Text>
+        <View style={{alignItems: "center", paddingTop: 100, backgroundColor: "#156352", width: "100%", elevation: 2}}>
+          <Image
+            source={logo}
+            style={{ height: 150, width: 150 }}
+          />
+          <Text style={styles.titleText}>Sysselsatt</Text>
+        </View>
         <View style={{ width: "80%" }}>
           <TextField
             label="E-postadress"
-            value={this.state.email}secureTextEntry={true}
+            value={this.state.email}
             tintColor="#156352"
             keyboardType="email-address"
             onChangeText={email => this.setState({ email })}
+            error={this.state.emailError}
           />
           <TextField
             label="Lösenord"
             value={this.state.password}
             secureTextEntry={true}
             tintColor="#156352"
-            keyboardType="visible-password"
             onChangeText={password => this.setState({ password })}
+            error={this.state.passwordError}
           />
-          <TextInput secureTextEntry={true} />
+          <TouchableHighlight
+            onPress={() => this.props.navigation.navigate("passwordReset")}
+          >
+            <Text style={styles.linkText}>Glömt lösenord?</Text>
+          </TouchableHighlight>
         </View>
-        <TouchableHighlight
-          onPress={() => this.props.navigation.navigate("passwordReset")}
-        >
-          <Text style={styles.registerText}>Glömt lösenord</Text>
-        </TouchableHighlight>
+
         {!this.state.signingIn && (
           <Button
             onPress={this.handleLogin.bind(this)}
             title="Logga in"
             style={styles.loginButton}
-            color="#2DC874"
+            color="#156352"
           />
         )}
-        <Text style={{ color: "#E74C3C" }}>{this.state.loginError}</Text>
         <TouchableHighlight
           style={{ marginTop: "auto", marginBottom: 48 }}
           onPress={() => this.props.navigation.navigate("Register")}
         >
-          <Text style={styles.registerText}>Registrera</Text>
+          <Text style={styles.linkText}>Registrera</Text>
         </TouchableHighlight>
       </View>
     );
@@ -99,15 +111,18 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   titleText: {
-    fontSize: 48,
+    fontSize: 38,
     fontWeight: "bold",
     width: "100%",
     textAlign: "center",
-    marginBottom: 50
+    marginBottom: 30,
+    marginTop: 5,
+    color: "#fff",
+    
   },
   loginButton: {
-    backgroundColor: "#2DC874",
-    width: 100
+    backgroundColor: "#156352",
+    width: 300
   },
   loginText: {
     fontWeight: "bold",
@@ -115,8 +130,12 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center"
   },
+  linkText: {
+    color: "#156352",
+    textAlign: "left"
+  },
   registerText: {
-    color: "#7F8C8D"
+    fontSize: 40
   },
   loginInput: {
     marginLeft: 10,

@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableNativeFeedback,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from "react-native";
 import { Avatar, ListItem } from "react-native-material-ui";
 import fire from "../../config/config";
@@ -14,6 +15,7 @@ import { connect } from "react-redux";
 import { getGroupId } from "../../actions/groupActions";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AddMember from "./addMember";
+import NotificationSwitch from "./notificationSwitch";
 
 class ManageGroup extends Component {
   constructor(props) {
@@ -40,7 +42,8 @@ class ManageGroup extends Component {
   componentWillReceiveProps = nextProps => {
     if (this.state.groupId != nextProps.groupId || this.state.groupId === "") {
       this.setState({
-        groupId: nextProps.groupId
+        groupId: nextProps.groupId,
+        members: []
       });
       this.getGroupInfo(nextProps.groupId);
     } else {
@@ -51,6 +54,8 @@ class ManageGroup extends Component {
   getGroupInfo = groupId => {
     if (groupId !== "") {
       if (groupId !== undefined) {
+        this.setState({ loading: true });
+
         this.db
           .collection("Groups")
           .doc(groupId)
@@ -104,14 +109,19 @@ class ManageGroup extends Component {
     });
     return (
       <View style={styles.groupView}>
-        {this.state.loading ? (
-          <ActivityIndicator size={38} />
-        ) : (
-          <View style={styles.members}>
-            <Text style={{ fontSize: 32, color: "#1c1c1c" }}>Medlemmar:</Text>
-            {renderUsers}
-          </View>
-        )}
+        <ScrollView
+          style={styles.members}
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => this.getGroupInfo(this.state.groupId)}
+              refreshing={this.state.loading}
+            />
+          }
+        >
+          <NotificationSwitch groupId={this.state.groupId} />
+          <Text style={{ fontSize: 32, color: "#1c1c1c" }}>Medlemmar:</Text>
+          {!this.state.loading ? <View>{renderUsers}</View> : null}
+        </ScrollView>
         <TouchableNativeFeedback
           onPress={() => this.setState({ addingMember: true })}
           background={TouchableNativeFeedback.SelectableBackground()}

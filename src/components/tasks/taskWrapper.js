@@ -6,13 +6,13 @@ import {
   StyleSheet,
   RefreshControl,
   ActivityIndicator,
-  TouchableNativeFeedback,
-  Modal
+  TouchableNativeFeedback
 } from "react-native";
 import fire from "../../config/config";
 import { connect } from "react-redux";
 import { getGroupId } from "../../actions/groupActions";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
 
 import CreateTask from "./createTask/createTask";
 import TaskItem from "./taskItem";
@@ -38,6 +38,7 @@ class TaskWrapper extends Component {
 
   componentWillMount = () => {
     this.getTasks(this.props.groupId);
+    console.log(this.state)
   };
 
   componentWillReceiveProps = nextProps => {
@@ -87,7 +88,7 @@ class TaskWrapper extends Component {
   };
 
   finishTask = (taskId, repCode) => {
-    console.log(repCode)
+    console.log(repCode);
     this.db
       .collection("Groups")
       .doc(this.state.groupId)
@@ -95,20 +96,20 @@ class TaskWrapper extends Component {
       .doc(taskId)
       .update({ completed: true });
 
-    if (repCode >= 0) {
-      console.log(repCode)
+    if (repCode >= 1) {
+      console.log(repCode);
       let now = new Date().getTime(),
         time;
       const dayInMillisecs = 86400;
 
       switch (repCode) {
-        case 0:
+        case 1:
           time = now + dayInMillisecs;
           break;
-        case 1:
+        case 2:
           time = now + dayInMillisecs * 7;
           break;
-        case 2:
+        case 3:
           time = now + dayInMillisecs * 28;
           break;
       }
@@ -143,21 +144,17 @@ class TaskWrapper extends Component {
     });
     return (
       <View style={styles.container}>
-        {this.state.loading ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                style={{ height: 0 }}
-                refreshing={this.state.refreshing}
-                onRefresh={() => this.getTasks(this.state.groupId)}
-              />
-            }
-          >
-            {renderTasks}
-          </ScrollView>
-        )}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              style={{ height: 0 }}
+              refreshing={this.state.loading}
+              onRefresh={() => this.getTasks(this.state.groupId)}
+            />
+          }
+        >
+          {!this.state.loading ? <View>{ renderTasks }</View> : null}
+        </ScrollView>
         <TouchableNativeFeedback
           onPress={() => this.setState({ cTask: true })}
           background={TouchableNativeFeedback.SelectableBackground()}

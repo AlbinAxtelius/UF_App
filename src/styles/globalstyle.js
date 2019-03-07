@@ -44,7 +44,8 @@ export default globalstyles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     alignItems: "center",
-    flexDirection: "column"
+    flexDirection: "column",
+    width: "100%"
   },
 
   popupHeader: {

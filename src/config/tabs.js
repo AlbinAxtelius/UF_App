@@ -19,24 +19,28 @@ import Invites from "../components/invites/invites";
 import CreateGroup from "../components/CreateGroup/createGroup";
 import ForgotPassword from "../components/login/forgotPassword";
 
-export const LoginStack = createStackNavigator({
-  Login: {
-    screen: Login,
-    navigationOptions: {
-      title: "Login",
-      headerTitleContainerStyle: {}
+export const LoginStack = createStackNavigator(
+  {
+    Login: {
+      screen: Login,
+      navigationOptions: {
+        title: "Login",
+
+        headerTitleContainerStyle: {}
+      }
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: {
+        title: "Register"
+      }
+    },
+    passwordReset: {
+      screen: ForgotPassword
     }
   },
-  Register: {
-    screen: Register,
-    navigationOptions: {
-      title: "Register"
-    }
-  },
-  passwordReset: {
-    screen: ForgotPassword
-  }
-});
+  { headerMode: "none" }
+);
 
 export const MainStack = createStackNavigator(
   {
