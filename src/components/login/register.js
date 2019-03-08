@@ -6,9 +6,13 @@ import {
   StatusBar,
   ScrollView,
   Button,
-  Text
+  Text,
+  TouchableNativeFeedback
 } from "react-native";
 import fire from "../../config/config";
+import { TextField } from "react-native-material-textfield";
+import { Ionicons } from "@expo/vector-icons";
+import globalstyles from "../../styles/globalstyle";
 
 export default class Register extends Component {
   constructor(props) {
@@ -17,12 +21,14 @@ export default class Register extends Component {
       displayName: "",
       email: "",
       password: "",
-      errorMessage: ""
+      errorMessage: "",
+      loading: false
     };
   }
 
   handleSubmit() {
-    if (this.state.displayName != "")
+    if (this.state.displayName != "") {
+      this.setState({ loading: true });
       fire
         .auth()
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
@@ -30,16 +36,22 @@ export default class Register extends Component {
           let errorMessage = "";
           switch (registerError.code) {
             case "auth/invalid-email":
-              errorMessage = "Ogiltig email";
+              errorMessage = { emailError: "Ogiltig email" };
               break;
             case "auth/wrong-password":
-              errorMessage = "Fel lösenord";
+              errorMessage = { passwordError: "Fel lösenord" };
               break;
             default:
-              errorMessage = "Something went wrong";
+              errorMessage = { nameError: "Something went wrong" };
               break;
           }
-          this.setState({ errorMessage });
+          this.setState({
+            passwordError: "",
+            emailError: "",
+            nameError: "",
+            ...errorMessage,
+            loading: false
+          });
         })
         .then(user => {
           if (user)
@@ -57,48 +69,62 @@ export default class Register extends Component {
                   )
               );
         });
-    else {
-      this.setState({ errorMessage: "Användarnamn saknas" });
+    } else {
+      this.setState({
+        loading: false,
+        passwordError: "",
+        emailError: "",
+        nameError: "Användarnamn saknas"
+      });
     }
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={globalstyles.container}>
+          <View style={globalstyles.popupHeader}>
+            <TouchableNativeFeedback
+              onPress={() => this.props.navigation.goBack()}
+              background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+            >
+              <View style={globalstyles.popupBack}>
+                <Ionicons name="md-arrow-back" color="#156352" size={24} />
+              </View>
+            </TouchableNativeFeedback>
+            <Text style={globalstyles.greenHeaderText}>Registrera</Text>
+        </View>
         <View style={styles.inputView}>
-          <TextInput
-            ref="name"
-            underlineColorAndroid="#2DC874"
-            style={styles.loginInput}
-            placeholder="Skärmnamn"
+          <TextField
+            tintColor="#156352"
+            label="Skärmnamn"
+            error={this.state.nameError}
             onChangeText={displayName => this.setState({ displayName })}
           />
-          <View style={styles.hr} />
-          <TextInput
-            underlineColorAndroid="#2DC874"
-            style={styles.loginInput}
-            placeholder="Email"
-            ref="email"
+          <TextField
+            tintColor="#156352"
+            label="Email"
             keyboardType="email-address"
+            error={this.state.emailError}
             onChangeText={email => this.setState({ email })}
           />
-          <TextInput
-            ref="password"
+          <TextField
             secureTextEntry={true}
-            underlineColorAndroid="#2DC874"
-            style={styles.loginInput}
-            placeholder="Lösenord"
+            tintColor="#156352"
+            error={this.state.passwordError}
+            label="Lösenord"
             onChangeText={password => this.setState({ password })}
           />
 
           <Text>{this.state.errorMessage}</Text>
+        </View>
+        {!this.state.loading && (
           <Button
             onPress={this.handleSubmit.bind(this)}
-            style={styles.loginButton}
+            // style={styles.loginButton}
             title="Skapa konto"
-            color="#2DC874"
+            color="#156352"
           />
-        </View>
+        )}
       </View>
     );
   }
@@ -117,14 +143,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
-  hr: {
-    width: "200%",
-    alignSelf: "center",
-    height: 1,
-    backgroundColor: "gray",
-    marginTop: 10,
-    marginBottom: 20
-  },
   h1: {
     width: "100%",
     textAlign: "center",
@@ -136,8 +154,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   inputView: {
-    paddingTop: 20,
-    width: 300,
+    width: "80%",
     marginLeft: "auto",
     marginRight: "auto"
   },

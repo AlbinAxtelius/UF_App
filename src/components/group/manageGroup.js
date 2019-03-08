@@ -119,7 +119,7 @@ class ManageGroup extends Component {
           }
         >
           <NotificationSwitch groupId={this.state.groupId} />
-          <Text style={{ fontSize: 32, color: "#1c1c1c" }}>Medlemmar:</Text>
+          <Text style={{ fontSize: 24, color: "#1c1c1c" }}>Medlemmar:</Text>
           {!this.state.loading ? <View>{renderUsers}</View> : null}
         </ScrollView>
         <TouchableNativeFeedback

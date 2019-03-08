@@ -10,6 +10,7 @@ import { Button } from "react-native-material-ui";
 import { Ionicons } from "@expo/vector-icons";
 import fire from "../../config/config";
 import globalstyles from "../../styles/globalstyle";
+import {TextField} from "react-native-material-textfield";
 
 export class CreateGroup extends Component {
   constructor(props) {
@@ -63,21 +64,22 @@ export class CreateGroup extends Component {
           </TouchableNativeFeedback>
           <Text style={globalstyles.headerText}>Skapa ny grupp</Text>
         </View>
-        <View style={{width: "90%", alignItems:'center'}}>
-          <TextInput
-            placeholder="Gruppnamn"
+        <View style={{width: "90%" }}>
+          <TextField
+            label="Gruppnamn"
+            tintColor="#156352"
+            fontSize={18}
             value={this.state.groupName}
             onChangeText={groupName => this.setState({ groupName })}
-            style={globalstyles.inputBig}
           />
-          <View style={{width: "50%"}}>
-          <Button
-            text="Skapa grupp"
-            accent
-            raised
-            disabled={this.state.groupName.length === 0}
-            onPress={() => this.handleCreate()}
-          />
+          <View style={{alignSelf: 'center', width: "50%" }}>
+            <Button
+              text="Skapa grupp"
+              accent
+              raised
+              disabled={this.state.groupName.length === 0}
+              onPress={() => this.handleCreate()}
+            />
           </View>
         </View>
       </View>

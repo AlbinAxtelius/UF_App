@@ -3,6 +3,7 @@ import { StyleSheet, StatusBar} from "react-native";
 export default globalstyles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
     backgroundColor: "white",
     borderTopColor: "#156352",
     borderTopWidth: StatusBar.currentHeight,

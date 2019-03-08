@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, View, Switch, StyleSheet } from "react-native";
 import { Notifications, Permissions } from "expo";
 import fire from "../../config/config";
 
@@ -14,8 +14,11 @@ export class NotificationSwitch extends Component {
     };
   }
 
-  componentDidUpdate = (prevprops) => {
-    if (prevprops.groupId !== this.props.groupId && this.props.groupId !== "")
+  componentDidUpdate = prevprops => {
+    if (prevprops.groupId !== this.props.groupId && this.props.groupId !== "") {
+      this.setState({
+        notificationAccess: false
+      });
       fire
         .firestore()
         .collection("Groups")
@@ -29,15 +32,17 @@ export class NotificationSwitch extends Component {
               pushTokenId: pushTokenIdDoc.docs[0].id,
               notificationAccess: true
             });
-            console.log(this.state)
+            console.log(this.state);
           }
           this.setState({ loading: false });
-        }).catch(console.log);
+        })
+        .catch(console.log);
+    }
   };
 
   handleNotificationSwitch = async notificationAccess => {
-    this.setState({loading: true})
-    console.log(notificationAccess)
+    this.setState({ loading: true });
+    console.log(notificationAccess);
     if (notificationAccess) {
       const { status } = await Permissions.getAsync("notifications");
       let newStatus = status;
@@ -58,11 +63,15 @@ export class NotificationSwitch extends Component {
           expoNotificationToken: token,
           userId: fire.auth().currentUser.uid
         })
-        .then((doc) => {
-          this.setState({ pushTokenId: doc.id ,notificationAccess: true, loading: false });
+        .then(doc => {
+          this.setState({
+            pushTokenId: doc.id,
+            notificationAccess: true,
+            loading: false
+          });
         });
     } else {
-      console.log(this.props)
+      console.log(this.props);
 
       fire
         .firestore()
@@ -71,24 +80,42 @@ export class NotificationSwitch extends Component {
         .collection("WillRecieveNotifications")
         .doc(this.state.pushTokenId)
         .delete()
-        .then(() => this.setState({ notificationAccess: false, loading: false }));
+        .then(() =>
+          this.setState({ notificationAccess: false, loading: false })
+        );
     }
   };
 
   render() {
     return (
-      <View>
-        <Text>Push notifikationer</Text>
-        <Switch
-          value={this.state.notificationAccess}
-          disabled={this.state.loading}
-          onValueChange={notificationAccess =>
-            this.handleNotificationSwitch(notificationAccess)
-          }
-        />
+      <View style={{ alignItems: "center" }}>
+        <View style={styles.switchContainer}>
+          <Text style={styles.switchText}>Push notifikationer</Text>
+          <Switch
+            value={this.state.notificationAccess}
+            disabled={this.state.loading}
+            onValueChange={notificationAccess =>
+              this.handleNotificationSwitch(notificationAccess)
+            }
+          />
+        </View>
+        <View style={{ height: 1, width: "80%", backgroundColor: "#1c1c1c" }} />
       </View>
     );
   }
 }
 
 export default NotificationSwitch;
+
+const styles = StyleSheet.create({
+  switchContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 50
+  },
+  switchText: {
+    fontSize: 24
+  }
+});
