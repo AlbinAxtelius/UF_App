@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#156352",
     flexDirection: "row",
     alignItems: "center",
-    elevation: 20
+    elevation: 20,
+    height: 60
   },
   picker: {
     width: "50%",

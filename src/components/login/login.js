@@ -5,7 +5,7 @@ import {
   View,
   Button,
   TouchableHighlight,
-  Image,
+  Image
 } from "react-native";
 import fire from "../../config/config";
 import { TextField } from "react-native-material-textfield";
@@ -54,11 +54,16 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{alignItems: "center", paddingTop: 100, backgroundColor: "#156352", width: "100%", elevation: 2}}>
-          <Image
-            source={logo}
-            style={{ height: 150, width: 150 }}
-          />
+        <View
+          style={{
+            alignItems: "center",
+            paddingTop: 100,
+            backgroundColor: "#156352",
+            width: "100%",
+            elevation: 2
+          }}
+        >
+          <Image source={logo} style={{ height: 150, width: 150 }} />
           <Text style={styles.titleText}>Sysselsatt</Text>
         </View>
         <View style={{ width: "80%" }}>
@@ -79,6 +84,9 @@ export default class App extends React.Component {
             error={this.state.passwordError}
           />
           <TouchableHighlight
+            hitSlop={{ top: 3, bottom: 3 }}
+            activeOpacity={0.2}
+            underlayColor="#fff"
             onPress={() => this.props.navigation.navigate("passwordReset")}
           >
             <Text style={styles.linkText}>Glömt lösenord?</Text>
@@ -94,6 +102,10 @@ export default class App extends React.Component {
           />
         )}
         <TouchableHighlight
+            hitSlop={{ top: 6, bottom: 6, left: 10, right: 10 }}
+
+          activeOpacity={0.2}
+          underlayColor="#fff"
           style={{ marginTop: "auto", marginBottom: 48 }}
           onPress={() => this.props.navigation.navigate("Register")}
         >
@@ -117,8 +129,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 30,
     marginTop: 5,
-    color: "#fff",
-    
+    color: "#fff"
   },
   loginButton: {
     backgroundColor: "#156352",

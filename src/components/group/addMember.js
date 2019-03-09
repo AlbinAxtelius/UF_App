@@ -56,7 +56,7 @@ export class AddMember extends Component {
               background={TouchableNativeFeedback.SelectableBackground()}
             >
               <View style={globalstyles.popupBack}>
-                <Ionicons name="md-arrow-back" size={24} />
+                <Ionicons name="md-arrow-back" color="#156352" size={24} />
               </View>
             </TouchableNativeFeedback>
             <Text style={globalstyles.greenHeaderText}>Lägg till medlem</Text>
@@ -67,7 +67,6 @@ export class AddMember extends Component {
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
               tintColor="#156352"
-              
             />
           </View>
           <View style={{ alignSelf: "flex-start", marginLeft: "2.5%" }}>
@@ -76,7 +75,11 @@ export class AddMember extends Component {
           {this.state.loading ? (
             <ActivityIndicator />
           ) : (
-            <Button onPress={() => this.handleAccept()} title="Lägg till" />
+            <Button
+              onPress={() => this.handleAccept()}
+              color="#156352"
+              title="Lägg till"
+            />
           )}
         </View>
       </Modal>

@@ -8,7 +8,7 @@
     "primaryColor": "#156352",
     "android": {
       "package": "com.johncy.sysselsatt",
-      "versionCode": 5,
+      "versionCode": 6,
       "icon": "./logo.png",
       "permissions": []
     }

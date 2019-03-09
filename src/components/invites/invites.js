@@ -1,9 +1,16 @@
-import React, { Component, Navigation } from 'react'
-import { Text, View, StyleSheet, TouchableNativeFeedback, StatusBar } from 'react-native'
-import fire from '../../config/config'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import globalstyles from '../../styles/globalstyle';
-
+import React, { Component, Navigation } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableNativeFeedback,
+  StatusBar,
+  ScrollView,
+  RefreshControl
+} from "react-native";
+import fire from "../../config/config";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import globalstyles from "../../styles/globalstyle";
 
 export class Invites extends Component {
   constructor() {
@@ -12,79 +19,85 @@ export class Invites extends Component {
     this.db = fire.firestore();
 
     this.state = {
-      invites: []
-    }
+      invites: [],
+      loading: true
+    };
   }
 
   componentWillMount = () => {
+    this.getInvites();
+  };
+
+  getInvites = () => {
+    this.setState({ loading: true });
     this.db
-      .collection('Users')
+      .collection("Users")
       .doc(fire.auth().currentUser.uid)
-      .collection('Invites')
+      .collection("Invites")
       .get()
       .then(snap => {
-        let invites = []
+        let invites = [];
         snap.forEach(doc => {
-          console.log(doc.data())
+          console.log(doc.data());
           invites.push({
             groupName: doc.data().groupName,
             groupId: doc.data().groupId,
             inviteId: doc.id
-          })
-        })
-        this.setState({ invites })
-      })
-  }
+          });
+        });
+        this.setState({ invites: invites, loading: false });
+      });
+  };
 
   acceptInvite = (groupId, inviteId, groupName, index) => {
     this.db
-      .collection('Groups')
+      .collection("Groups")
       .doc(groupId)
-      .collection('Members')
+      .collection("Members")
       .add({
         displayName: fire.auth().currentUser.displayName,
         userId: fire.auth().currentUser.uid
       })
       .then(() => {
         this.db
-          .collection('Users')
+          .collection("Users")
           .doc(fire.auth().currentUser.uid)
-          .collection('Groups')
+          .collection("Groups")
           .add({
             groupName: groupName,
             groupId: groupId
-          })
+          });
       })
       .then(() => {
         this.db
-          .collection('Users')
+          .collection("Users")
           .doc(fire.auth().currentUser.uid)
-          .collection('Invites')
+          .collection("Invites")
           .doc(inviteId)
           .delete()
           .then(() => {
-            console.log("Invite accepted")
+            console.log("Invite accepted");
             let invites = this.state.invites;
             invites.splice(index, 1);
             this.setState({ invites });
-          })
-      })
-  }
+          });
+      });
+  };
 
   declineInvite = (inviteId, index) => {
     this.db
-      .collection('Users')
+      .collection("Users")
       .doc(fire.auth().currentUser.uid)
-      .collection('Invites')
+      .collection("Invites")
       .doc(inviteId)
       .delete()
       .then(() => {
-        console.log("Invite declined")
+        console.log("Invite declined");
         let invites = this.state.invites;
         invites.splice(index, 1);
         this.setState({ invites });
-      })
-  }
+      });
+  };
 
   render() {
     let renderInvites = this.state.invites.map((e, i) => (
@@ -94,7 +107,9 @@ export class Invites extends Component {
         </View>
         <View style={styles.inviteButtonView}>
           <TouchableNativeFeedback
-            onPress={() => this.acceptInvite(e.groupId, e.inviteId, e.groupName, i)}
+            onPress={() =>
+              this.acceptInvite(e.groupId, e.inviteId, e.groupName, i)
+            }
             background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
           >
             <View>
@@ -111,7 +126,7 @@ export class Invites extends Component {
           </TouchableNativeFeedback>
         </View>
       </View>
-    ))
+    ));
 
     return (
       <View style={globalstyles.container}>
@@ -123,33 +138,43 @@ export class Invites extends Component {
           </TouchableNativeFeedback>
           <Text style={globalstyles.headerText}>Inbjudningar</Text>
         </View>
-        {renderInvites}
+        <ScrollView
+          style={{ flex: 1, width: "100%" }}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={() => this.getInvites()}
+            />
+          }
+        >
+          {renderInvites}
+        </ScrollView>
       </View>
-    )
+    );
   }
 }
 
-export default Invites
+export default Invites;
 
 const styles = StyleSheet.create({
   inviteView: {
-    borderBottomWidth: .8,
+    borderBottomWidth: 0.8,
     borderBottomColor: "#BDC3C7",
     width: "100%",
     height: 80,
     padding: 20,
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row"
   },
   inviteTextView: {
     flex: 3
   },
   inviteText: {
-    fontSize: 20,
+    fontSize: 20
   },
   inviteButtonView: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around"
   }
-})
+});
