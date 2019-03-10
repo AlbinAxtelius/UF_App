@@ -5,7 +5,7 @@
 
 # dependencies
 /node_modules
-
+google-services.json
 /src/config/config.js
 
 # misc

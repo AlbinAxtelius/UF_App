@@ -8,9 +8,11 @@
     "primaryColor": "#156352",
     "android": {
       "package": "com.johncy.sysselsatt",
-      "versionCode": 6,
+      "versionCode": 7,
       "icon": "./logo.png",
-      "permissions": []
+      "permissions": [],
+      "googleServicesFile": "./google-services.json"
+      
     }
   }
 }
